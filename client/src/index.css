@@ -1,0 +1,103 @@
+.right-side-link {
+  gap: 10px;
+}
+
+.right-side-link .nav-link {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.right-side-link .nav-link .link-description {
+  font-size: 12px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #002050;
+}
+
+.navbar-dark .navbar-text {
+  color: #fff;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.blog-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  /* justify-content: space-evenly; */
+}
+
+.blog-container .card {
+  width: 25rem;
+}
+
+.blog-container .card a {
+  text-decoration: none;
+}
+
+.reaction-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.go-back {
+  cursor: pointer;
+  text-align: center;
+  color: #0d6efd;
+}
+
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page {
+  min-height: 80vh;
+}
+
+.bg-lightgray {
+  background-color: #d3d3d3;
+}
+
+.checkbox {
+  width: 30px;
+  height: 30px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.author-misc {
+  display: flex;
+  justify-content: space-between;
+}
+
+.blog-date {
+  font-style: italic;
+}
+
+.comment {
+  font-size: 0.9rem;
+}
+
+.comment-heading {
+  font-weight: 1.2rem;
+  font-weight: bold;
+}
+
+.comment-title {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none !important;
+}
