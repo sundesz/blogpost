@@ -36,7 +36,7 @@ const CreateComment = () => {
   return (
     <Container className="content-container py-5">
       <PageTitle
-        title={`Add new comment for: {capitalize(state.blog.title)}`}
+        title={`Add new comment for: ${capitalize(state.blog.title)}`}
       />
       <CommentForm blogId={state.blog.blogId} onSubmit={onSubmit} />
     </Container>

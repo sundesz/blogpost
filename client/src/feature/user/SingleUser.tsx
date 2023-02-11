@@ -9,7 +9,7 @@ const SingleUser = () => {
 
   return (
     <Container className="py-5">
-      <PageTitle title={` Name: ${capitalize(state.user.name)}`} />
+      <PageTitle title={`Name: ${capitalize(state.user.name)}`} />
       <div>Email: {state.user.email}</div>
     </Container>
   );
