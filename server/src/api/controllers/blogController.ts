@@ -23,13 +23,13 @@ const reactionCountSubQuery = (reactionType: ReactionType) => {
  * Rating count subquery
  * @returns
  */
-const ratingCountSubQuery = (blogId: string, rating: number) => {
+const ratingCountSubQuery = (slug: string, rating: number) => {
   return sequelize.literal(`(
     SELECT COUNT(*)::int
     FROM blogs AS "blog"
     LEFT JOIN comments AS "comments" ON "blog".blog_id = "comments".blog_id
     LEFT JOIN ratings AS ratings ON "comments".comment_id = ratings.comment_id
-    WHERE "blog".blog_id = '${blogId}'
+    WHERE "blog".slug = '${slug}'
       AND ratings.rating ='${rating}')`);
 };
 
@@ -38,7 +38,7 @@ const ratingCountSubQuery = (blogId: string, rating: number) => {
  */
 const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
   try {
-    const { id: blogId } = req.params as { id: string };
+    const { slug } = req.params as { slug: string };
 
     const blog = await Blog.findOne({
       attributes: [
@@ -51,11 +51,11 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
         [reactionCountSubQuery('wow'), 'wow'],
         [reactionCountSubQuery('heart'), 'heart'],
 
-        [ratingCountSubQuery(blogId, 1), 'rating1'],
-        [ratingCountSubQuery(blogId, 2), 'rating2'],
-        [ratingCountSubQuery(blogId, 3), 'rating3'],
-        [ratingCountSubQuery(blogId, 4), 'rating4'],
-        [ratingCountSubQuery(blogId, 5), 'rating5'],
+        [ratingCountSubQuery(slug, 1), 'rating1'],
+        [ratingCountSubQuery(slug, 2), 'rating2'],
+        [ratingCountSubQuery(slug, 3), 'rating3'],
+        [ratingCountSubQuery(slug, 4), 'rating4'],
+        [ratingCountSubQuery(slug, 5), 'rating5'],
       ],
       include: [
         {
@@ -89,7 +89,7 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
           required: false,
         },
       ],
-      where: { blogId, published: true, passive: false },
+      where: { slug, published: true, passive: false },
       order: [['updatedAt', 'DESC']],
     });
 
@@ -135,19 +135,19 @@ const create: RequestHandler = async (req, res, next: NextFunction) => {
     const userId = req.session.data!.userId;
 
     const { title, content, published, slug } = req.body as NewBlogType;
-    const newBlog = await Blog.create(
+    const blog = await Blog.create(
       {
         userId,
         title,
         content,
         slug,
-        published,
+        published: published ?? false,
         passive: false,
-      },
-      { returning: false }
+      }
+      // { returning: false }
     );
 
-    res.json(newBlog);
+    res.json(blog.slug);
   } catch (error: unknown) {
     next(error);
   }
@@ -168,15 +168,15 @@ const update: RequestHandler = async (req, res, next: NextFunction) => {
     // only admin can change the user
     const updateUserId = sessionData?.role === 'admin' ? userId : blog.userId;
 
-    blog.title = title ? title : blog.title;
-    blog.content = content ? content : blog.content;
-    blog.slug = slug ? slug : blog.slug;
-    blog.userId = updateUserId ? updateUserId : blog.userId;
-    blog.published = published === undefined ? blog.published : published;
+    blog.title = title ?? blog.title;
+    blog.content = content ?? blog.content;
+    blog.slug = slug ?? blog.slug;
+    blog.userId = updateUserId ?? blog.userId;
+    blog.published = published ?? blog.published;
 
     await blog.save();
 
-    res.json(blog);
+    res.json(blog.slug);
   } catch (error: unknown) {
     next(error);
   }
