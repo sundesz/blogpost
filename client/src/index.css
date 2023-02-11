@@ -85,19 +85,36 @@
   font-style: italic;
 }
 
+.comment-date,
 .comment {
   font-size: 0.9rem;
 }
 
-.comment-heading {
-  font-weight: 1.2rem;
-  font-weight: bold;
+.commenter {
+  text-transform: capitalize;
 }
 
+.comment-heading {
+  display: flex;
+  gap: 10px;
+  text-transform: capitalize;
+}
+
+.blog-review-title,
 .comment-title {
   font-weight: bold;
 }
 
 a {
   text-decoration: none !important;
+}
+
+.blog-star {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.progress {
+  width: 150px;
 }
