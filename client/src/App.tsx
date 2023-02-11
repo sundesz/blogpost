@@ -16,6 +16,8 @@ import RequireNoAuth from './feature/auth/RequireNoAuth';
 import AuthorList from './feature/author/AuthorList';
 import SingleAuthor from './feature/author/SingleAuthor';
 import CreateComment from './feature/comment/CreateComment';
+import SingleUser from './feature/user/SingleUser';
+import SingleComment from './feature/comment/SingleComment';
 
 const App = () => {
   return (
@@ -31,16 +33,18 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="blogs">
             <Route index element={<BlogList />} />
-            <Route path=":blogId" element={<SingleBlog />} />
+            <Route path=":blogSlug" element={<SingleBlog />} />
           </Route>
 
           <Route path="authors">
             <Route index element={<AuthorList />} />
             <Route path=":authorId" element={<SingleAuthor />} />
           </Route>
+          <Route path="users/:userId" element={<SingleUser />} />
 
           <Route path="comments">
             <Route path="new" element={<CreateComment />} />
+            {/* <Route path=":commentId" element={<SingleComment />} /> */}
           </Route>
 
           <Route element={<RequireNoAuth />}>
@@ -52,7 +56,7 @@ const App = () => {
           <Route element={<RequireAuth />}>
             <Route path="blogs">
               <Route path="new" element={<CreateBlog />} />
-              <Route path="update/:blogId" element={<UpdateBlog />} />
+              <Route path="update/:blogSlug" element={<UpdateBlog />} />
             </Route>
             <Route path="/signout" element={<Logout />} />
           </Route>
