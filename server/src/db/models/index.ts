@@ -14,7 +14,10 @@ Reaction.belongsTo(Blog, { foreignKey: 'blog_id' });
 Blog.hasMany(Comment, { foreignKey: 'blog_id' });
 Comment.belongsTo(Blog, { foreignKey: 'blog_id' });
 
-Blog.hasMany(Rating, { foreignKey: 'blog_id' });
-Rating.belongsTo(Blog, { foreignKey: 'blog_id' });
+User.hasMany(Comment, { foreignKey: 'user_id' });
+Comment.belongsTo(User, { foreignKey: 'user_id' });
+
+Comment.hasOne(Rating, { foreignKey: 'comment_id' });
+Rating.belongsTo(Comment, { foreignKey: 'comment_id' });
 
 export { User, Blog, Reaction, Session, Rating, Comment };
