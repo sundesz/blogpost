@@ -9,7 +9,9 @@ interface ISingleCommentProps {
 
 const SingleComment: React.FC<ISingleCommentProps> = ({ comment }) => {
   const commenter = comment.user ? (
-    <Link to={`/users/${comment.user.userId}`}>{comment.user.name}</Link>
+    <Link to={`/users/${comment.user.userId}`} state={{ user: comment.user }}>
+      {comment.user.name}
+    </Link>
   ) : (
     'Anonymous user'
   );

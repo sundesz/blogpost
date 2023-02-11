@@ -1,5 +1,6 @@
 import { Formik, Form as FormikForm, Field } from 'formik';
 import * as Yup from 'yup';
+import PageTitle from '../../../components/PageTitle';
 import { ILogin } from '../../../types';
 import { SubmitButton, InputField } from '../../../utils';
 
@@ -22,7 +23,8 @@ const VALIDATION_SCHEMA = Yup.object().shape({
 const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
   return (
     <div>
-      <h1 className="mb-5">Sign In</h1>
+      <PageTitle title="Sign in" />
+
       <Formik
         initialValues={INITIAL_VALUES}
         validationSchema={VALIDATION_SCHEMA}

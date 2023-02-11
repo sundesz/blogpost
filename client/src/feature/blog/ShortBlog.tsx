@@ -12,7 +12,7 @@ const ShortBlog: React.FC<IBlogProps> = ({ blog }) => {
       <Card.Body>
         <Card.Title>{blog.title}</Card.Title>
         <Card.Text>{blog.content}</Card.Text>
-        <Link to={`/blogs/${blog.blogId}`}>Read more ...</Link>
+        <Link to={`/blogs/${blog.slug}`}>Read more ...</Link>
       </Card.Body>
     </Card>
   );

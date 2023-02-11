@@ -8,32 +8,35 @@ import Loading from '../../components/Loading';
 import BlogForm from './BlogForm';
 import { useGetAllAuthorQuery } from '../author/authorApiSlice';
 import slugify from 'slugify';
+import { slugifyOptions } from '../../config';
+import ErrorPage from '../../components/ErrorPage';
 
 const CreateBlog: React.FC = () => {
   const navigate = useNavigate();
   const { data: authors, isLoading, isError, error } = useGetAllAuthorQuery();
   const [createBlog] = useCreateBlogMutation();
 
-  if (isError) {
-    return <p>{JSON.stringify(error)}</p>;
-  }
-
-  if (authors === undefined) {
-    return <p>No authors</p>;
-  }
-
   if (isLoading) {
     return <Loading />;
   }
 
+  if (isError) {
+    return <ErrorPage error={error} />;
+  }
+
+  if (!authors) {
+    return <p>No authors</p>;
+  }
+
   const onSubmit = async (newBlogData: ICreateUpdateBlogParams) => {
     try {
-      await createBlog({
+      const createdBlogSlug = await createBlog({
         ...newBlogData,
-        slug: slugify(newBlogData.title),
+        slug: slugify(newBlogData.title, slugifyOptions),
       }).unwrap();
-      toast.success(`Blog successfully created`);
-      navigate('/');
+
+      toast.success(`Blog created successfully.`);
+      navigate(`/blogs/${createdBlogSlug}`);
     } catch (error) {
       if (isFetchBaseQueryError(error)) {
         const errorCodes = [400, 401];
@@ -43,7 +46,7 @@ const CreateBlog: React.FC = () => {
         } else if (errorCodes.includes(error.status as number)) {
           errMessage = error.data as string;
         } else {
-          errMessage = 'Creating blog Failed';
+          errMessage = 'Failed creating blog.';
         }
         toast.error(errMessage);
       }

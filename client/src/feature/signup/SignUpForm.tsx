@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { INewUser, UserRole } from '../../types';
 import { SubmitButton, InputField, SelectField, capitalize } from '../../utils';
+import PageTitle from '../../components/PageTitle';
 
 interface ISignUpFormProps {
   onSubmit: (values: INewUser) => void;
@@ -37,7 +38,7 @@ const SignUpForm: React.FC<ISignUpFormProps> = ({ onSubmit }) => {
 
   return (
     <div>
-      <h1 className="mb-5">Sign Up</h1>
+      <PageTitle title="Sign up" />
 
       <Formik
         initialValues={INITIAL_VALUES}

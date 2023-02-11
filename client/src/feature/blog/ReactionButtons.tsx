@@ -15,7 +15,7 @@ const ReactionButtons = ({ blog }: IReactionButtonsProps) => {
         blogId: blog.blogId,
         reactionType,
       });
-      toast.success('Reacted successfully');
+      toast.success(`${reactionEmoji[reactionType]} reacted successfully.`);
     } catch (error) {
       console.error(error);
     }

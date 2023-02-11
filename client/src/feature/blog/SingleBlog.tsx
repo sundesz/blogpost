@@ -3,9 +3,9 @@ import { Container } from 'react-bootstrap';
 import nl2br from 'react-nl2br';
 import { Link, useParams } from 'react-router-dom';
 import ErrorPage from '../../components/ErrorPage';
-import GoBack from '../../components/GoBack';
 import Loading from '../../components/Loading';
 import Page404 from '../../components/Page404';
+import PageTitle from '../../components/PageTitle';
 import { useAppSelector } from '../../hooks/reduxToolkit';
 import { capitalize } from '../../utils';
 import { selectCurrentUser } from '../auth/authSlice';
@@ -15,8 +15,12 @@ import ReactionButtons from './ReactionButtons';
 
 const SingleBlog: React.FC = () => {
   const user = useAppSelector(selectCurrentUser);
-  const { blogId } = useParams() as { blogId: string };
-  const { data: blog, isLoading, isError, error } = useGetBlogQuery(blogId);
+  const { blogSlug } = useParams() as { blogSlug: string };
+  const { data: blog, isLoading, isError, error } = useGetBlogQuery(blogSlug);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (isError) {
     return <ErrorPage error={error} />;
@@ -26,21 +30,18 @@ const SingleBlog: React.FC = () => {
     return <Page404 />;
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   // user is admin or logged in user create the blog
   const conditionForEdit =
     user.isAuthenticate &&
     (user.role === 'admin' || blog.user.userId === user.userId);
 
+  const conditionForComment =
+    !user.isAuthenticate || user.userId !== blog.user.userId;
+
   return (
     <Container className="content-container py-5">
-      <div className="page-title">
-        <h1 className="display-5 fw-bold">{capitalize(blog.title)} </h1>
-        <GoBack />
-      </div>
+      <PageTitle title={capitalize(blog.title)} />
+
       <div className="">
         <p className="lead mb-4">{nl2br(blog.content)}</p>
       </div>
@@ -61,23 +62,25 @@ const SingleBlog: React.FC = () => {
       <div className="button-group">
         <ReactionButtons blog={blog} />
 
-        <div>
+        <div className="crud-button">
           {conditionForEdit && (
             <Link
-              to={`/blogs/update/${blogId}`}
+              to={`/blogs/update/${blogSlug}`}
               state={{ blog }}
               className="btn btn-primary"
             >
               Edit
             </Link>
           )}
-          <Link
-            to={`/comments/new`}
-            state={{ blog }}
-            className="btn btn-primary"
-          >
-            Add comment
-          </Link>
+          {conditionForComment && (
+            <Link
+              to={`/comments/new`}
+              state={{ blog }}
+              className="btn btn-primary"
+            >
+              Add comment
+            </Link>
+          )}
         </div>
       </div>
 

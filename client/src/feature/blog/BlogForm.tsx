@@ -17,6 +17,7 @@ import {
   SelectField,
   capitalize,
 } from '../../utils';
+import PageTitle from '../../components/PageTitle';
 
 interface IBlogFormProps {
   blog?: IBlog;
@@ -51,8 +52,8 @@ const BlogForm: React.FC<IBlogFormProps> = ({
     title: crudType === 'update' ? blog!.title : '',
     slug: '',
     content: crudType === 'update' ? blog!.content : '',
-    published: crudType === 'update' ? blog!.published : false,
-    author: crudType === 'update' ? blog!.user.userId : '',
+    published: crudType === 'update' ? blog!.published : true,
+    author: crudType === 'update' ? blog!.user.userId : user.userId,
   };
 
   const authorOptions = authors.map((author) => ({
@@ -62,7 +63,7 @@ const BlogForm: React.FC<IBlogFormProps> = ({
 
   return (
     <div>
-      <h1 className="mb-5">{capitalize(crudType)} blog</h1>
+      <PageTitle title={`${capitalize(crudType)} blog`} />
 
       <Formik
         initialValues={INITIAL_VALUES}
@@ -101,7 +102,7 @@ const BlogForm: React.FC<IBlogFormProps> = ({
             label="Author"
             selectOptions={authorOptions}
             component={SelectField}
-            disabledValue={crudType === 'update' && user.role !== 'admin'}
+            disabledValue={user.role !== 'admin'}
           />
 
           <SubmitButton id="create-blog-btn" name={capitalize(crudType)} />

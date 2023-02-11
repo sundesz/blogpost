@@ -14,7 +14,7 @@ const CommentList: React.FC<ICommentListProps> = ({ blog }) => {
       <BlogRating blogRating={blog.blogRating} />
 
       <div className="comment-heading">
-        {comments.length ? 'Comments' : 'No comments yet'}
+        {comments.length ? 'Comments' : 'No comments yet.'}
       </div>
 
       {comments &&

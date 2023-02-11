@@ -7,12 +7,12 @@ import ShortBlog from './ShortBlog';
 const BlogList = () => {
   const { data: blogs, isLoading, error, isError } = useGetAllBlogQuery();
 
-  if (isError) {
-    return <ErrorPage error={error} />;
-  }
-
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isError) {
+    return <ErrorPage error={error} />;
   }
 
   return (

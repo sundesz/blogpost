@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Navigate, redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/reduxToolkit';
 import { useLogoutMutation } from './authApiSlice';
 import { logOut } from './authSlice';

@@ -1,7 +1,7 @@
 import { Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import GoBack from '../../components/GoBack';
+import PageTitle from '../../components/PageTitle';
 import { IBlog, ICreateUpdateCommentParams } from '../../types';
 import { capitalize, isFetchBaseQueryError } from '../../utils';
 import { useCreateCommentMutation } from './commentApiSlice';
@@ -15,8 +15,8 @@ const CreateComment = () => {
   const onSubmit = async (commentData: ICreateUpdateCommentParams) => {
     try {
       await createComment(commentData).unwrap();
-      toast.success(`Comment successfully created`);
-      navigate(`/blogs/${state.blog.blogId}`);
+      toast.success(`Comment added successfully.`);
+      navigate(`/blogs/${state.blog.slug}`);
     } catch (error) {
       if (isFetchBaseQueryError(error)) {
         const errorCodes = [400, 401];
@@ -26,7 +26,7 @@ const CreateComment = () => {
         } else if (errorCodes.includes(error.status as number)) {
           errMessage = error.data as string;
         } else {
-          errMessage = 'Creating comment Failed';
+          errMessage = 'Failed adding comment.';
         }
         toast.error(errMessage);
       }
@@ -35,13 +35,9 @@ const CreateComment = () => {
 
   return (
     <Container className="content-container py-5">
-      <div className="page-title">
-        <h1 className="mb-5">
-          Add new comment for: {capitalize(state.blog.title)}
-        </h1>
-        <GoBack />
-      </div>
-
+      <PageTitle
+        title={`Add new comment for: {capitalize(state.blog.title)}`}
+      />
       <CommentForm blogId={state.blog.blogId} onSubmit={onSubmit} />
     </Container>
   );
