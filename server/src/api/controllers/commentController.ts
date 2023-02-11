@@ -21,7 +21,7 @@ const create: RequestHandler = async (req, res, next: NextFunction) => {
       passive: false,
     });
 
-    if (newComment) {
+    if (newComment && rating) {
       await Rating.create({ commentId: newComment.commentId, rating });
     }
 
