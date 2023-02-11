@@ -11,29 +11,26 @@ import { NewBlogType, UpdateBlogType, ReactionType } from '../../types';
  */
 const reactionCountSubQuery = (reactionType: ReactionType) => {
   return sequelize.literal(`(
-    SELECT COUNT(*)
+    SELECT COUNT(*)::int
     FROM reaction AS reaction
     WHERE
         reaction.blog_id = "blog".blog_id
         AND
-        reaction.reaction_type ='${reactionType}'
-)`);
+        reaction.reaction_type ='${reactionType}')`);
 };
 
 /**
  * Rating count subquery
- * @param reactionType
  * @returns
  */
-const ratingCountSubQuery = (star: number) => {
+const ratingCountSubQuery = (blogId: string, rating: number) => {
   return sequelize.literal(`(
-    SELECT COUNT(*)
-    FROM ratings AS ratings
-    WHERE
-        ratings.blog_id = "blog".blog_id
-        AND
-        ratings.star ='${star}'
-)`);
+    SELECT COUNT(*)::int
+    FROM blogs AS "blog"
+    LEFT JOIN comments AS "comments" ON "blog".blog_id = "comments".blog_id
+    LEFT JOIN ratings AS ratings ON "comments".comment_id = ratings.comment_id
+    WHERE "blog".blog_id = '${blogId}'
+      AND ratings.rating ='${rating}')`);
 };
 
 /**
@@ -53,11 +50,12 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
         [reactionCountSubQuery('thumbsUp'), 'thumbsUp'],
         [reactionCountSubQuery('wow'), 'wow'],
         [reactionCountSubQuery('heart'), 'heart'],
-        [ratingCountSubQuery(1), 'rating_1'],
-        [ratingCountSubQuery(2), 'rating_2'],
-        [ratingCountSubQuery(3), 'rating_3'],
-        [ratingCountSubQuery(4), 'rating_4'],
-        [ratingCountSubQuery(5), 'rating_5'],
+
+        [ratingCountSubQuery(blogId, 1), 'rating1'],
+        [ratingCountSubQuery(blogId, 2), 'rating2'],
+        [ratingCountSubQuery(blogId, 3), 'rating3'],
+        [ratingCountSubQuery(blogId, 4), 'rating4'],
+        [ratingCountSubQuery(blogId, 5), 'rating5'],
       ],
       include: [
         {
@@ -66,17 +64,23 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
           where: { isActive: true },
         },
         {
-          model: Rating,
-          attributes: ['star'],
-          where: { published: true, passive: false },
-          required: false,
-        },
-        {
           model: Comment,
+          include: [
+            {
+              model: Rating,
+              attributes: ['ratingId', 'rating'],
+            },
+            {
+              model: User,
+              attributes: ['name', 'email', 'userId'],
+              where: { isActive: true },
+              required: false,
+            },
+          ],
           attributes: [
             'commentId',
             'blogId',
-            'userId',
+            // 'userId',
             'title',
             'content',
             'updatedAt',
@@ -110,17 +114,6 @@ const getAllBlogs: RequestHandler = async (_req, res, next: NextFunction) => {
         'title',
         [sequelize.fn('LEFT', sequelize.col('content'), 50), 'content'], // Return first n characters in the string
         'slug',
-        [
-          sequelize.literal(`(SELECT COUNT(*)
-          FROM ratings AS rating
-          WHERE
-              rating.blog_id = "blog".blog_id
-              AND
-              rating.passive = false
-              AND
-              rating.published = true)`),
-          'rating',
-        ],
       ],
       include: { model: User, attributes: ['name', 'email', 'userId'] },
       where: { published: true },
