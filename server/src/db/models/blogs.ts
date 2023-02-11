@@ -25,6 +25,7 @@ Blog.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     content: {
       type: DataTypes.TEXT,
@@ -33,6 +34,7 @@ Blog.init(
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     published: {
       type: DataTypes.BOOLEAN,

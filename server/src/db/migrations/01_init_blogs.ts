@@ -25,6 +25,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     published: {
       type: DataTypes.BOOLEAN,
