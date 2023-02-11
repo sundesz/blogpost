@@ -16,8 +16,8 @@ export const blogApiSlice = apiSlice.injectEndpoints({
     }),
 
     getBlog: builder.query<IBlog, string>({
-      query: (blogId) => ({
-        url: `/blogs/${blogId}`,
+      query: (blogSlug) => ({
+        url: `/blogs/${blogSlug}`,
       }),
       // https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-query-and-mutation-endpoints
       transformResponse: (responseData: IBlogResponse) => {
@@ -53,12 +53,13 @@ export const blogApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Blog'],
     }),
 
-    createBlog: builder.mutation<IBlog, ICreateUpdateBlogParams>({
+    createBlog: builder.mutation<string, ICreateUpdateBlogParams>({
       query: (newBlog) => ({
         url: `/blogs`,
         method: 'POST',
         body: {
           title: newBlog.title,
+          slug: newBlog.slug,
           content: newBlog.content,
           userId: newBlog.author,
           published: newBlog.published,
@@ -67,12 +68,13 @@ export const blogApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Blogs'],
     }),
 
-    updateBlog: builder.mutation<IBlog, ICreateUpdateBlogParams>({
+    updateBlog: builder.mutation<string, ICreateUpdateBlogParams>({
       query: (updateBlog) => ({
-        url: `/blogs/${updateBlog.blogId}`,
+        url: `/blogs/${updateBlog.slug}`,
         method: 'PUT',
         body: {
           title: updateBlog.title,
+          slug: updateBlog.slug,
           content: updateBlog.content,
           userId: updateBlog.author,
           published: updateBlog.published,
