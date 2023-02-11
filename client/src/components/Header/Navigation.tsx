@@ -25,7 +25,10 @@ const Navigation: React.FC = (): JSX.Element => {
             <Nav.Link id="blog-link" as={Link} to="/blogs" title="Blogs">
               Blogs
             </Nav.Link>
-            {user.isAuthenticate ? (
+            <Nav.Link id="blog-link" as={Link} to="/authors" title="Author">
+              Authors
+            </Nav.Link>
+            {user.role === 'author' && (
               <Nav.Link
                 id="new-blog-link"
                 as={Link}
@@ -34,8 +37,6 @@ const Navigation: React.FC = (): JSX.Element => {
               >
                 Create blog
               </Nav.Link>
-            ) : (
-              <></>
             )}
           </Nav>
           {user.isAuthenticate ? (
