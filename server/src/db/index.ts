@@ -15,8 +15,7 @@ export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     //   rejectUnauthorized: false,
     // },
   },
-  // logging: process.env.NODE_ENV === 'production' ? false : console.log,
-  logging: console.log,
+  logging: process.env.NODE_ENV === 'prod' ? false : console.log,
 });
 
 enum LocationTyp {
