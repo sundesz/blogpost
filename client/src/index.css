@@ -26,6 +26,7 @@
   cursor: pointer;
 }
 
+.author-container,
 .blog-container {
   display: flex;
   gap: 30px;
@@ -33,12 +34,17 @@
   /* justify-content: space-evenly; */
 }
 
+.author-container .card,
 .blog-container .card {
   width: 25rem;
 }
 
 .blog-container .card a {
   text-decoration: none;
+}
+
+.author-container .card a {
+  text-transform: capitalize;
 }
 
 .reaction-buttons {
@@ -90,6 +96,7 @@
   font-size: 0.9rem;
 }
 
+.user-name,
 .commenter {
   text-transform: capitalize;
 }
@@ -98,6 +105,7 @@
   display: flex;
   gap: 10px;
   text-transform: capitalize;
+  font-weight: bold;
 }
 
 .blog-review-title,
@@ -117,4 +125,9 @@ a {
 
 .progress {
   width: 150px;
+}
+
+.crud-button {
+  display: flex;
+  gap: 10px;
 }
