@@ -1,6 +1,7 @@
 import { apiSlice } from '../../app/api/apiSlice';
 import {
   IBlog,
+  IBlogRating,
   IBlogResponse,
   ICreateUpdateBlogParams,
   IReaction,
@@ -20,14 +21,33 @@ export const blogApiSlice = apiSlice.injectEndpoints({
       }),
       // https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-query-and-mutation-endpoints
       transformResponse: (responseData: IBlogResponse) => {
-        const { thumbsUp, wow, heart, ...blog } = responseData;
+        const {
+          thumbsUp,
+          wow,
+          heart,
+          rating1,
+          rating2,
+          rating3,
+          rating4,
+          rating5,
+          ...blog
+        } = responseData;
+
         const reaction: IReaction = {
-          thumbsUp: thumbsUp ? Number(thumbsUp) : 0,
-          wow: wow ? Number(wow) : 0,
-          heart: heart ? Number(heart) : 0,
+          thumbsUp: thumbsUp ?? 0,
+          wow: wow ?? 0,
+          heart: heart ?? 0,
         };
 
-        return { ...(blog as IBlog), reaction };
+        const blogRating: IBlogRating = {
+          rating1: rating1 ?? 0,
+          rating2: rating2 ?? 0,
+          rating3: rating3 ?? 0,
+          rating4: rating4 ?? 0,
+          rating5: rating5 ?? 0,
+        };
+
+        return { ...(blog as IBlog), reaction, blogRating };
       },
 
       providesTags: ['Blog'],

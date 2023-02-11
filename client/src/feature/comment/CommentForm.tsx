@@ -1,6 +1,11 @@
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
-import { SubmitButton, InputField, TextAreaField } from '../../utils';
+import {
+  SubmitButton,
+  InputField,
+  TextAreaField,
+  SelectField,
+} from '../../utils';
 import { ICreateUpdateCommentParams } from '../../types';
 
 interface ICommentFormProps {
@@ -15,6 +20,10 @@ const VALIDATION_SCHEMA = Yup.object().shape({
     .required('Title is required'),
 
   content: Yup.string().required('Content is required'),
+
+  rating: Yup.number()
+    .required('Rating is required')
+    .oneOf([1, 2, 3, 4, 5], 'Rating is required'),
 });
 
 const CommentForm: React.FC<ICommentFormProps> = ({ blogId, onSubmit }) => {
@@ -23,7 +32,13 @@ const CommentForm: React.FC<ICommentFormProps> = ({ blogId, onSubmit }) => {
     title: '',
     content: '',
     published: true,
+    rating: 0,
   };
+
+  const rateOptions = [1, 2, 3, 4, 5].map((rate) => ({
+    name: rate,
+    value: rate,
+  }));
 
   return (
     <div>
@@ -48,6 +63,14 @@ const CommentForm: React.FC<ICommentFormProps> = ({ blogId, onSubmit }) => {
             placeholder="Comment ..."
             component={TextAreaField}
             rows="5"
+          />
+
+          <Field
+            name="rating"
+            id="rating"
+            label="Rating"
+            selectOptions={rateOptions}
+            component={SelectField}
           />
 
           <SubmitButton id="create-comment-btn" name="Create" />

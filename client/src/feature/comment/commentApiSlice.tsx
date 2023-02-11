@@ -11,6 +11,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
           title: newComment.title,
           content: newComment.content,
           published: newComment.published,
+          rating: newComment.rating,
         },
       }),
       invalidatesTags: ['Blog'],

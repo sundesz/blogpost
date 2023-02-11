@@ -81,7 +81,7 @@ const SingleBlog: React.FC = () => {
         </div>
       </div>
 
-      <CommentList comments={blog.comments} />
+      <CommentList blog={blog} />
     </Container>
   );
 };

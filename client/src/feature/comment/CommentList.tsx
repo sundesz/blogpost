@@ -1,13 +1,18 @@
-import { IComment } from '../../types';
+import { IBlog, IComment } from '../../types';
+import BlogRating from './BlogRating';
 import SingleComment from './SingleComment';
 
 interface ICommentListProps {
-  comments: IComment[];
+  blog: IBlog;
 }
 
-const CommentList: React.FC<ICommentListProps> = ({ comments }) => {
+const CommentList: React.FC<ICommentListProps> = ({ blog }) => {
+  const comments = blog.comments;
+
   return (
     <div className="comment-list py-4">
+      <BlogRating blogRating={blog.blogRating} />
+
       <div className="comment-heading">
         {comments.length ? 'Comments' : 'No comments yet'}
       </div>

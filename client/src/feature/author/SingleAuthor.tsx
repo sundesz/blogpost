@@ -24,7 +24,6 @@ const SingleAuthor = () => {
   if (isLoading) {
     return <Loading />;
   }
-  console.log(author);
 
   return (
     <Container className="py-5">
