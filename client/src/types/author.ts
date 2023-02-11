@@ -1,8 +1,6 @@
 import { IBlog } from './blog';
+import { IUser } from './user';
 
-export interface IAuthor {
-  userId: string;
-  name: string;
-  email: string;
+export type IAuthor = IUser & {
   blogs?: IBlog[];
-}
+};

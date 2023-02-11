@@ -2,13 +2,6 @@ export type UserRoleType = 'admin' | 'author' | 'user';
 
 export const UserRole = ['admin', 'author', 'user'] as const;
 
-// export interface IUser {
-//   userId: string;
-//   username: string;
-//   passwordHash: string;
-//   updateAt?: string;
-// }
-
 // export interface INewUserValues {
 //   name: string;
 //   username: string;
@@ -30,4 +23,10 @@ export interface INewUser {
   name: string;
   email: string;
   password: string;
+}
+
+export interface IUser {
+  userId: string;
+  name: string;
+  email: string;
 }

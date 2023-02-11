@@ -1,10 +1,14 @@
+import { IRating } from './rating';
+import { IUser } from './user';
+
 export interface IComment {
   commentId: string;
   blogId: string;
-  userId: string | null;
   title: string;
   content: string;
   updatedAt?: string;
+  user: IUser | null;
+  rating: IRating | null;
 }
 
 export interface ICreateUpdateCommentParams {
@@ -12,6 +16,7 @@ export interface ICreateUpdateCommentParams {
   blogId?: string;
   title: string;
   content: string;
+  rating: number;
   published?: boolean;
   passive?: boolean;
 }
