@@ -1,4 +1,6 @@
+import { Container } from 'react-bootstrap';
 import { isFetchBaseQueryError } from '../utils/fetchQueryHelper';
+import GoBack from './GoBack';
 import Page404 from './Page404';
 
 const ErrorPage = ({ error }: { error: unknown }) => {
@@ -9,7 +11,18 @@ const ErrorPage = ({ error }: { error: unknown }) => {
     return <Page404 />;
   }
 
-  return <div>{JSON.stringify(error)}</div>;
+  let errorMessage = JSON.stringify(error);
+
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+
+  return (
+    <Container className="p-5">
+      <div className="display-5 fw-bold text-center">{errorMessage}</div>
+      <GoBack />
+    </Container>
+  );
 };
 
 export default ErrorPage;
