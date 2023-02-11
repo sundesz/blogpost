@@ -10,12 +10,7 @@ const Navigation: React.FC = (): JSX.Element => {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand
-          id="app-name"
-          as={Link}
-          to="/"
-          className="font-weight-bold"
-        >
+        <Navbar.Brand id="app-name" as={Link} to="/">
           Blog post
         </Navbar.Brand>
 
