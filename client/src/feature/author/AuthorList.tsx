@@ -17,19 +17,23 @@ const AuthorList = () => {
 
   return (
     <Container className="author-container py-5">
-      {authors?.map((author) => (
-        <Card key={author.userId}>
-          <Card.Body>
-            <Card.Title>
-              <Link to={`/authors/${author.userId}`}>{author.name}</Link>
-            </Card.Title>
-            <Card.Body>{author.email}</Card.Body>
-            <Card.Footer>
-              {author.blogs ? author.blogs.length : 0} blog(s)
-            </Card.Footer>
-          </Card.Body>
-        </Card>
-      ))}
+      {authors ? (
+        authors.map((author) => (
+          <Card key={author.userId}>
+            <Card.Body>
+              <Card.Title>
+                <Link to={`/authors/${author.userId}`}>{author.name}</Link>
+              </Card.Title>
+              <Card.Body>{author.email}</Card.Body>
+              <Card.Footer>
+                {author.blogs ? author.blogs.length : 0} blog(s)
+              </Card.Footer>
+            </Card.Body>
+          </Card>
+        ))
+      ) : (
+        <div>No authors yet.</div>
+      )}
     </Container>
   );
 };
