@@ -12,7 +12,7 @@ const Home = () => {
       <section className="py-5 text-center bg-white">
         <Container>
           <div className="mx-auto">
-            <h1 className="fw-light">Welcome to Blog post App</h1>
+            <h1 className="display-4 fw-light">Welcome to Blog post App</h1>
             <p className="lead text-muted">
               <b>Lorem Ipsum </b>is simply dummy text of the printing and
               typesetting industry. Lorem Ipsum has been the industry's standard
