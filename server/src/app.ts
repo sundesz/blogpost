@@ -76,7 +76,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req: Request, res: Response) => {
-  console.log(req.sessionID);
   if (req.session.views) {
     req.session.views++;
     // req.setHeader('Content-Type', 'text/html');
