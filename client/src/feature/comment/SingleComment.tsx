@@ -23,9 +23,10 @@ const SingleComment: React.FC<ISingleCommentProps> = ({ comment }) => {
         <div className="comment-heading">
           <Rating rating={comment.rating?.rating} />
           <div className="comment-title">
-            <Link to={`/comments/${comment.commentId}`} state={{ comment }}>
+            {comment.title}
+            {/* <Link to={`/comments/${comment.commentId}`} state={{ comment }}>
               {comment.title}
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="comment-date">
