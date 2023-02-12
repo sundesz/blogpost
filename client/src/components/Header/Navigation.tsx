@@ -20,7 +20,7 @@ const Navigation: React.FC = (): JSX.Element => {
             <Nav.Link id="blog-link" as={Link} to="/blogs" title="Blogs">
               Blogs
             </Nav.Link>
-            <Nav.Link id="blog-link" as={Link} to="/authors" title="Author">
+            <Nav.Link id="author-link" as={Link} to="/authors" title="Author">
               Authors
             </Nav.Link>
             {user.role === 'author' && (
