@@ -10,7 +10,16 @@ export const authorApiSlice = apiSlice.injectEndpoints({
 
     getAllAuthor: builder.query<IAuthor[], void>({
       query: () => '/authors',
-      providesTags: ['Authors'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ userId }) => ({
+                type: 'Authors' as const,
+                id: userId,
+              })),
+              { type: 'Authors', id: 'LIST' },
+            ]
+          : [{ type: 'Authors', id: 'LIST' }],
     }),
   }),
 });

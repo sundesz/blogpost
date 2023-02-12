@@ -12,7 +12,16 @@ export const blogApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllBlog: builder.query<IBlog[], void>({
       query: () => '/blogs',
-      providesTags: ['Blogs'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ blogId }) => ({
+                type: 'Blogs' as const,
+                id: blogId,
+              })),
+              { type: 'Blogs', id: 'LIST' },
+            ]
+          : [{ type: 'Blogs', id: 'LIST' }],
     }),
 
     getBlog: builder.query<IBlog, string>({
@@ -50,7 +59,16 @@ export const blogApiSlice = apiSlice.injectEndpoints({
         return { ...(blog as IBlog), reaction, blogRating };
       },
 
-      providesTags: ['Blog'],
+      providesTags: (result) =>
+        result
+          ? [
+              {
+                type: 'Blog' as const,
+                id: result.blogId,
+              },
+              { type: 'Blog', id: 'LIST' },
+            ]
+          : [{ type: 'Blog', id: 'LIST' }],
     }),
 
     createBlog: builder.mutation<string, ICreateUpdateBlogParams>({
@@ -65,7 +83,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           published: newBlog.published,
         },
       }),
-      invalidatesTags: ['Blogs'],
+      invalidatesTags: [{ type: 'Blogs', id: 'LIST' }],
     }),
 
     updateBlog: builder.mutation<string, ICreateUpdateBlogParams>({
@@ -80,7 +98,10 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           published: updateBlog.published,
         },
       }),
-      invalidatesTags: ['Blog'],
+
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Blogs', id: arg.blogId },
+      ],
     }),
 
     updateReaction: builder.mutation<IBlog, IUpdateReactionParams>({
@@ -91,7 +112,9 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           reactionType: blog.reactionType,
         },
       }),
-      invalidatesTags: ['Blog'],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Blogs', id: arg.blogId },
+      ],
     }),
   }),
 });
