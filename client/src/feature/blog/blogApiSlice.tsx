@@ -83,12 +83,12 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           published: newBlog.published,
         },
       }),
-      invalidatesTags: [{ type: 'Blogs', id: 'LIST' }],
+      invalidatesTags: ['Blogs', 'Authors'],
     }),
 
     updateBlog: builder.mutation<string, ICreateUpdateBlogParams>({
       query: (updateBlog) => ({
-        url: `/blogs/${updateBlog.slug}`,
+        url: `/blogs/${updateBlog.blogId}`,
         method: 'PUT',
         body: {
           title: updateBlog.title,
@@ -99,9 +99,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
         },
       }),
 
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Blogs', id: arg.blogId },
-      ],
+      invalidatesTags: ['Blogs'],
     }),
 
     updateReaction: builder.mutation<IBlog, IUpdateReactionParams>({
