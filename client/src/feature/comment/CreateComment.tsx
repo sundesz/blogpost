@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageTitle from '../../components/PageTitle';
 import { IBlog, ICreateUpdateCommentParams } from '../../types';
-import { capitalize, isFetchBaseQueryError } from '../../utils';
+import { capitalize } from '../../utils';
+import ErrorNotification from '../../utils/ErrorNotification';
+import { message } from '../../utils/notificationMessage';
 import { useCreateCommentMutation } from './commentApiSlice';
 import CommentForm from './CommentForm';
 
@@ -15,21 +17,10 @@ const CreateComment = () => {
   const onSubmit = async (commentData: ICreateUpdateCommentParams) => {
     try {
       await createComment(commentData).unwrap();
-      toast.success(`Comment added successfully.`);
+      toast.success(message.SUCCESS.CREATE_COMMENT);
       navigate(`/blogs/${state.blog.slug}`);
     } catch (error) {
-      if (isFetchBaseQueryError(error)) {
-        const errorCodes = [400, 401];
-        let errMessage;
-        if (!error?.status) {
-          errMessage = 'No Server Response';
-        } else if (errorCodes.includes(error.status as number)) {
-          errMessage = error.data as string;
-        } else {
-          errMessage = 'Failed adding comment.';
-        }
-        toast.error(errMessage);
-      }
+      ErrorNotification(error, message.FAILED.CREATE_COMMENT);
     }
   };
 

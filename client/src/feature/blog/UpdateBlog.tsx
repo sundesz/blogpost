@@ -1,6 +1,5 @@
 import { Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { isFetchBaseQueryError } from '../../utils';
 import { toast } from 'react-toastify';
 import { useUpdateBlogMutation } from './blogApiSlice';
 import { IBlog, ICreateUpdateBlogParams } from '../../types';
@@ -10,6 +9,8 @@ import { useGetAllAuthorQuery } from '../author/authorApiSlice';
 import slugify from 'slugify';
 import { slugifyOptions } from '../../config';
 import ErrorPage from '../../components/ErrorPage';
+import ErrorNotification from '../../utils/ErrorNotification';
+import { message } from '../../utils/notificationMessage';
 
 const UpdateBlog: React.FC = () => {
   const navigate = useNavigate();
@@ -26,10 +27,6 @@ const UpdateBlog: React.FC = () => {
     return <ErrorPage error={error} />;
   }
 
-  if (!authors) {
-    return <p>No authors</p>;
-  }
-
   const onSubmit = async (updateBlogData: ICreateUpdateBlogParams) => {
     try {
       const updatedBlogSlug = await updateBlog({
@@ -38,32 +35,25 @@ const UpdateBlog: React.FC = () => {
         slug: slugify(updateBlogData.title, slugifyOptions),
       }).unwrap();
 
-      toast.success(`Blog updated successfully.`);
+      toast.success(message.SUCCESS.UPDATE_BLOG);
       navigate(`/blogs/${updatedBlogSlug}`);
     } catch (error) {
-      if (isFetchBaseQueryError(error)) {
-        const errorCodes = [400, 401];
-        let errMessage;
-        if (!error?.status) {
-          errMessage = 'No Server Response';
-        } else if (errorCodes.includes(error.status as number)) {
-          errMessage = error.data as string;
-        } else {
-          errMessage = 'Failed updating blog.';
-        }
-        toast.error(errMessage);
-      }
+      ErrorNotification(error, message.FAILED.UPDATE_BLOG);
     }
   };
 
   return (
     <Container className="content-container py-5">
-      <BlogForm
-        crudType="update"
-        blog={state.blog}
-        onSubmit={onSubmit}
-        authors={authors}
-      />
+      {authors ? (
+        <BlogForm
+          crudType="update"
+          blog={state.blog}
+          onSubmit={onSubmit}
+          authors={authors}
+        />
+      ) : (
+        <div>Please add author first.</div>
+      )}
     </Container>
   );
 };

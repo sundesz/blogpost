@@ -1,6 +1,5 @@
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { isFetchBaseQueryError } from '../../utils';
 import { toast } from 'react-toastify';
 import { useCreateBlogMutation } from './blogApiSlice';
 import { ICreateUpdateBlogParams } from '../../types';
@@ -10,6 +9,8 @@ import { useGetAllAuthorQuery } from '../author/authorApiSlice';
 import slugify from 'slugify';
 import { slugifyOptions } from '../../config';
 import ErrorPage from '../../components/ErrorPage';
+import ErrorNotification from '../../utils/ErrorNotification';
+import { message } from '../../utils/notificationMessage';
 
 const CreateBlog: React.FC = () => {
   const navigate = useNavigate();
@@ -24,10 +25,6 @@ const CreateBlog: React.FC = () => {
     return <ErrorPage error={error} />;
   }
 
-  if (!authors) {
-    return <p>No authors</p>;
-  }
-
   const onSubmit = async (newBlogData: ICreateUpdateBlogParams) => {
     try {
       const createdBlogSlug = await createBlog({
@@ -35,27 +32,20 @@ const CreateBlog: React.FC = () => {
         slug: slugify(newBlogData.title, slugifyOptions),
       }).unwrap();
 
-      toast.success(`Blog created successfully.`);
+      toast.success(message.SUCCESS.CREATE_BLOG);
       navigate(`/blogs/${createdBlogSlug}`);
     } catch (error) {
-      if (isFetchBaseQueryError(error)) {
-        const errorCodes = [400, 401];
-        let errMessage;
-        if (!error?.status) {
-          errMessage = 'No Server Response';
-        } else if (errorCodes.includes(error.status as number)) {
-          errMessage = error.data as string;
-        } else {
-          errMessage = 'Failed creating blog.';
-        }
-        toast.error(errMessage);
-      }
+      ErrorNotification(error, message.FAILED.CREATE_BLOG);
     }
   };
 
   return (
     <Container className="content-container py-5">
-      <BlogForm crudType="create" onSubmit={onSubmit} authors={authors} />
+      {authors ? (
+        <BlogForm crudType="create" onSubmit={onSubmit} authors={authors} />
+      ) : (
+        <div>Please add author first.</div>
+      )}
     </Container>
   );
 };
