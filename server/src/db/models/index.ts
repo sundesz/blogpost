@@ -11,6 +11,9 @@ Blog.belongsTo(User, { foreignKey: 'user_id' });
 Blog.hasMany(Reaction, { foreignKey: 'blog_id' });
 Reaction.belongsTo(Blog, { foreignKey: 'blog_id' });
 
+User.hasMany(Reaction, { foreignKey: 'user_id' });
+Reaction.belongsTo(User, { foreignKey: 'user_id' });
+
 Blog.hasMany(Comment, { foreignKey: 'blog_id' });
 Comment.belongsTo(Blog, { foreignKey: 'blog_id' });
 
