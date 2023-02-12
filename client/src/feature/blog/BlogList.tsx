@@ -17,9 +17,11 @@ const BlogList = () => {
 
   return (
     <Container className="blog-container py-5">
-      {blogs?.map((blog) => (
-        <ShortBlog key={blog.blogId} blog={blog} />
-      ))}
+      {blogs ? (
+        blogs.map((blog) => <ShortBlog key={blog.blogId} blog={blog} />)
+      ) : (
+        <div>No blog yet.</div>
+      )}
     </Container>
   );
 };
