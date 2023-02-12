@@ -17,7 +17,7 @@ const AuthorList = () => {
 
   return (
     <Container className="author-container py-5">
-      {authors ? (
+      {authors && authors.length ? (
         authors.map((author) => (
           <Card key={author.userId}>
             <Card.Body>
@@ -32,7 +32,7 @@ const AuthorList = () => {
           </Card>
         ))
       ) : (
-        <div>No authors yet.</div>
+        <div className="no-data">No author yet.</div>
       )}
     </Container>
   );

@@ -15,12 +15,14 @@ const BlogList = () => {
     return <ErrorPage error={error} />;
   }
 
+  console.log(blogs);
+
   return (
     <Container className="blog-container py-5">
-      {blogs ? (
+      {blogs && blogs.length ? (
         blogs.map((blog) => <ShortBlog key={blog.blogId} blog={blog} />)
       ) : (
-        <div>No blog yet.</div>
+        <div className="no-data">No blog yet.</div>
       )}
     </Container>
   );
