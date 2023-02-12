@@ -7,7 +7,7 @@ const blogRouter = Router();
 blogRouter.get('/', blogController.getAllBlogs);
 blogRouter.get('/:slug', blogController.getBlog);
 blogRouter.post('/', blogController.create);
-blogRouter.put('/toggle/:slug', blogFinder, blogController.toggle);
-blogRouter.put('/:slug', isAdminOrAuthor, blogFinder, blogController.update);
+blogRouter.put('/toggle/:id', blogFinder, blogController.toggle);
+blogRouter.put('/:id', isAdminOrAuthor, blogFinder, blogController.update);
 
 export default blogRouter;

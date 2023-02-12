@@ -46,6 +46,7 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
         'title',
         'content',
         'slug',
+        'published',
         'updatedAt',
         [reactionCountSubQuery('thumbsUp'), 'thumbsUp'],
         [reactionCountSubQuery('wow'), 'wow'],
