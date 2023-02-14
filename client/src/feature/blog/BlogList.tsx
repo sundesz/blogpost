@@ -15,8 +15,6 @@ const BlogList = () => {
     return <ErrorPage error={error} />;
   }
 
-  console.log(blogs);
-
   return (
     <Container className="blog-container py-5">
       {blogs && blogs.length ? (
