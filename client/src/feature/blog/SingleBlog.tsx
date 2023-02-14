@@ -35,8 +35,7 @@ const SingleBlog: React.FC = () => {
     user.isAuthenticate &&
     (user.role === 'admin' || blog.user.userId === user.userId);
 
-  const conditionForComment =
-    !user.isAuthenticate || user.userId !== blog.user.userId;
+  const isOwnBlog = user.userId === blog.user.userId;
 
   return (
     <Container className="content-container py-5">
@@ -60,11 +59,12 @@ const SingleBlog: React.FC = () => {
       </div>
 
       <div className="button-group">
-        <ReactionButtons blog={blog} />
+        <ReactionButtons blog={blog} isOwnBlog={isOwnBlog} />
 
         <div className="crud-button">
           {conditionForEdit && (
             <Link
+              id="edit-btn"
               to={`/blogs/update/${blogSlug}`}
               state={{ blog }}
               className="btn btn-primary"
@@ -72,8 +72,9 @@ const SingleBlog: React.FC = () => {
               Edit
             </Link>
           )}
-          {conditionForComment && (
+          {!isOwnBlog && (
             <Link
+              id="comment-btn"
               to={`/comments/new`}
               state={{ blog }}
               className="btn btn-primary"
