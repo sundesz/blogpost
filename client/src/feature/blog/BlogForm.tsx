@@ -105,7 +105,10 @@ const BlogForm: React.FC<IBlogFormProps> = ({
             disabledValue={user.role !== 'admin'}
           />
 
-          <SubmitButton id="create-blog-btn" name={capitalize(crudType)} />
+          <SubmitButton
+            id={`${crudType}-blog-btn`}
+            name={capitalize(crudType)}
+          />
         </Form>
       </Formik>
     </div>
