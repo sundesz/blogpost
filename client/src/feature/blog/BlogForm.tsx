@@ -87,23 +87,27 @@ const BlogForm: React.FC<IBlogFormProps> = ({
             component={TextAreaField}
           />
 
-          <Field
-            id="published"
-            label="Published"
-            name="published"
-            type="checkbox"
-            bootstrapClass="form-check checkbox"
-            component={InputField}
-          />
+          {user.role === 'admin' && (
+            <Field
+              id="published"
+              label="Published"
+              name="published"
+              type="checkbox"
+              bootstrapClass="form-check checkbox"
+              component={InputField}
+            />
+          )}
 
-          <Field
-            name="author"
-            id="author"
-            label="Author"
-            selectOptions={authorOptions}
-            component={SelectField}
-            disabledValue={user.role !== 'admin'}
-          />
+          {user.role === 'admin' && (
+            <Field
+              name="author"
+              id="author"
+              label="Author"
+              selectOptions={authorOptions}
+              component={SelectField}
+              disabledValue={user.role !== 'admin'}
+            />
+          )}
 
           <SubmitButton
             id={`${crudType}-blog-btn`}
