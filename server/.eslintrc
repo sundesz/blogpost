@@ -21,16 +21,26 @@
       "error",
       { "argsIgnorePattern": "^_" }
     ],
-    "no-case-declarations": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {
         "checksVoidReturn": false
       }
-    ]
+    ],
+    "no-case-declarations": "off",
+    // "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    // "semi": ["error", "on"],
+    "eqeqeq": "error",
+    "no-trailing-spaces": "error",
+    "object-curly-spacing": ["error", "always"],
+    "arrow-spacing": ["error", { "before": true, "after": true }],
+    "no-console": 0
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./server/tsconfig.json"
+    // "project": "./tsconfig.json"
   }
 }
