@@ -39,7 +39,7 @@ const remove: RequestHandler = async (req, res, next: NextFunction) => {
       },
     });
 
-    res.sendStatus(204);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

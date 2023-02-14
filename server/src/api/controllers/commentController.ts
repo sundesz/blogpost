@@ -58,7 +58,7 @@ const update: RequestHandler = async (req, res, next: NextFunction) => {
       await ratingBlog?.save();
     }
 
-    res.sendStatus(204);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
@@ -88,7 +88,7 @@ const toggle: RequestHandler = async (req, res, next: NextFunction) => {
     comment.passive = !comment.passive;
     await comment.save();
 
-    res.sendStatus(204);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

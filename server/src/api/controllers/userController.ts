@@ -42,7 +42,7 @@ const toggle: RequestHandler = async (req, res, next: NextFunction) => {
       { where: { userId } }
     );
 
-    res.sendStatus(204);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

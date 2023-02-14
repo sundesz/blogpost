@@ -95,7 +95,7 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
     });
 
     if (!blog) {
-      return res.sendStatus(404).end();
+      return res.status(404).end();
     }
 
     res.json(blog);
@@ -202,7 +202,7 @@ const toggle: RequestHandler = async (req, res, next: NextFunction) => {
     blog.passive = !blog.passive;
     await blog.save();
 
-    res.sendStatus(204);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
