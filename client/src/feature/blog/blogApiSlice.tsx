@@ -12,16 +12,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllBlog: builder.query<IBlog[], void>({
       query: () => '/blogs',
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ blogId }) => ({
-                type: 'Blogs' as const,
-                id: blogId,
-              })),
-              { type: 'Blogs', id: 'LIST' },
-            ]
-          : [{ type: 'Blogs', id: 'LIST' }],
+      providesTags: ['Blogs'],
     }),
 
     getBlog: builder.query<IBlog, string>({
@@ -59,16 +50,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
         return { ...(blog as IBlog), reaction, blogRating };
       },
 
-      providesTags: (result) =>
-        result
-          ? [
-              {
-                type: 'Blog' as const,
-                id: result.blogId,
-              },
-              { type: 'Blog', id: 'LIST' },
-            ]
-          : [{ type: 'Blog', id: 'LIST' }],
+      providesTags: ['Blog'],
     }),
 
     createBlog: builder.mutation<string, ICreateUpdateBlogParams>({
@@ -99,7 +81,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
         },
       }),
 
-      invalidatesTags: ['Blogs'],
+      invalidatesTags: ['Blogs', 'Blog'],
     }),
 
     updateReaction: builder.mutation<IBlog, IUpdateReactionParams>({
@@ -110,9 +92,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           reactionType: blog.reactionType,
         },
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Blogs', id: arg.blogId },
-      ],
+      invalidatesTags: ['Blog'],
     }),
   }),
 });
