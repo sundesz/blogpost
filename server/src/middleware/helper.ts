@@ -19,7 +19,7 @@ export const blogFinder: RequestHandler = async (
     });
 
     if (!blog) {
-      return res.sendStatus(404);
+      return res.status(404).end();
     }
 
     req.blog = blog;
@@ -96,6 +96,25 @@ export const isAdmin: RequestHandler = (req, res, next: NextFunction) => {
     }
 
     if (req.session.data?.role !== 'admin') {
+      return res.status(403).end();
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Check user permission. Only author
+ */
+export const isAuthor: RequestHandler = (req, res, next: NextFunction) => {
+  try {
+    if (!req.session.data?.userId) {
+      return res.status(401).end();
+    }
+
+    if (req.session.data?.role !== 'author') {
       return res.status(403).end();
     }
 
