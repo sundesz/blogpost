@@ -8,10 +8,10 @@ GET http://localhost:8080/api/v1/session
 GET http://localhost:8080/api/v1/authors
 
 ###
-GET http://localhost:8080/api/v1/authors/181f2614-28f8-4620-958d-70f1465bc1c9
+GET http://localhost:8080/api/v1/authors/{author-id}
 
 ###
-PUT http://localhost:8080/api/v1/users/deactivate/181f2614-28f8-4620-958d-70f1465bc1c9
+PUT http://localhost:8080/api/v1/users/deactivate/{author-id}
 
 ###
 
@@ -19,9 +19,9 @@ POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
 {
-  "name": "sandesh",
-  "email": "sundesz@gmail.com",
-  "password": "sandesh",
+  "name": "test user",
+  "email": "test@test.com",
+  "password": "test123",
   "role": "author"
 }
 
@@ -30,8 +30,8 @@ POST http://localhost:8080/api/v1/login
 Content-Type: application/json
 
 {
-  "username": "sundesz@gmail.com",
-  "password": "sandesh"
+  "username": "test@test.com",
+  "password": "test123"
 }
 
 ###
@@ -44,11 +44,10 @@ GET http://localhost:8080/api/v1/blogs
 
 
 ###
-GET http://localhost:8080/api/v1/blogs/d587484d-92f1-4294-895b-5b3606d72ed3
-
+GET http://localhost:8080/api/v1/blogs/{blog-id}
 
 ###
-POST http://localhost:8080/api/v1/reactions/fdb003e3-433c-4e7d-9fae-939d9f350ea6
+POST http://localhost:8080/api/v1/reactions/{blog-id}
 Content-Type: application/json
 
 {
@@ -61,7 +60,8 @@ POST http://localhost:8080/api/v1/blogs
 Content-Type: application/json
 
 {
-  "title": "Hello Tika 2",
+  "title": "test blog",
+  "slug": "test-blog",
   "content": "Sandesh Hyoju working hard"
 }
 
@@ -70,7 +70,6 @@ PUT http://localhost:8080/api/v1/blogs/0213556b-54cb-4e40-a8b5-9dc6e3541eea
 Content-Type: application/json
 
 {
-  "title": "Update blog",
+  "title": "testing blog",
   "content": "Sandesh Hyoju working hard",
-  "published": true
 }
