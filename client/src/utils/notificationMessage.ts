@@ -7,6 +7,7 @@ export const message = {
   },
   FAILED: {
     LOGIN: 'Login Failed.',
+    REACTION: 'Failed reacting.',
     CREATE_BLOG: 'Failed creating blog.',
     UPDATE_BLOG: 'Failed updating blog.',
     CREATE_COMMENT: 'Failed adding comment.',
