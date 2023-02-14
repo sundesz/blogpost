@@ -31,6 +31,7 @@ const ReactionButtons = ({ blog, isOwnBlog }: IReactionButtonsProps) => {
   const reactionButton = Object.entries(reactionEmoji).map(([name, emoji]) => {
     return (
       <Button
+        id={`${name}-btn`}
         variant="outline-dark"
         key={name}
         onClick={() => reactionHandler(blog, name as ReactionType)}
