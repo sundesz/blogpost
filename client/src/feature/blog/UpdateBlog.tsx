@@ -36,7 +36,11 @@ const UpdateBlog: React.FC = () => {
       }).unwrap();
 
       toast.success(message.SUCCESS.UPDATE_BLOG);
-      navigate(`/blogs/${updatedBlogSlug}`);
+
+      const navigateUrl = updateBlogData.published
+        ? `/blogs/${updatedBlogSlug}`
+        : '/';
+      navigate(navigateUrl);
     } catch (error) {
       ErrorNotification(error, message.FAILED.UPDATE_BLOG);
     }

@@ -33,7 +33,11 @@ const CreateBlog: React.FC = () => {
       }).unwrap();
 
       toast.success(message.SUCCESS.CREATE_BLOG);
-      navigate(`/blogs/${createdBlogSlug}`);
+
+      const navigateUrl = newBlogData.published
+        ? `/blogs/${createdBlogSlug}`
+        : '/';
+      navigate(navigateUrl);
     } catch (error) {
       ErrorNotification(error, message.FAILED.CREATE_BLOG);
     }
