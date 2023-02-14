@@ -35,3 +35,7 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('createUser', (signUpData) => {
+  cy.request('POST', 'http://localhost:8080/api/v1/users', signUpData);
+});
