@@ -8,7 +8,10 @@ GET http://localhost:8080/api/v1/session
 GET http://localhost:8080/api/v1/authors
 
 ###
-GET http://localhost:8080/api/v1/authors/{author-id}
+GET http://localhost:8080/api/v1/authors/f7bdfeab-005d-495c-9490-0cbbdd03c489
+
+###
+GET http://localhost:8080/api/v1/authors/e6146d45-67b9-4955-b339-ad0bdd6f42fc
 
 ###
 PUT http://localhost:8080/api/v1/users/deactivate/{author-id}
@@ -20,7 +23,7 @@ Content-Type: application/json
 
 {
   "name": "test user",
-  "email": "test@test.com",
+  "email": "sundesz@gmail.com",
   "password": "test123",
   "role": "author"
 }
@@ -30,8 +33,8 @@ POST http://localhost:8080/api/v1/login
 Content-Type: application/json
 
 {
-  "username": "test@test.com",
-  "password": "test123"
+  "username": "admin@admin.com",
+  "password": "admin"
 }
 
 ###
@@ -42,12 +45,14 @@ POST http://localhost:8080/api/v1/logout
 ###
 GET http://localhost:8080/api/v1/blogs
 
+###
+GET http://localhost:8080/api/v1/blogs
 
 ###
-GET http://localhost:8080/api/v1/blogs/{blog-id}
+POST http://localhost:8080/api/v1/blogs/blogImage
 
 ###
-POST http://localhost:8080/api/v1/reactions/{blog-id}
+POST http://localhost:8080/api/v1/reactions/abc571cf-fb70-4896-8378-abbc532f4832
 Content-Type: application/json
 
 {
@@ -71,5 +76,5 @@ Content-Type: application/json
 
 {
   "title": "testing blog",
-  "content": "Sandesh Hyoju working hard",
+  "content": "Sandesh Hyoju working hard"
 }

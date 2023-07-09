@@ -1,8 +1,19 @@
 import { NextFunction, RequestHandler } from 'express';
-// import { Op, Sequelize } from 'sequelize';
 import { sequelize } from '../../db';
-import { Blog, Comment, Rating, User } from '../../db/models';
-import { NewBlogType, UpdateBlogType, ReactionType } from '../../types';
+import crypto from 'node:crypto';
+import { Blog, Comment, Image, Rating, User } from '../../db/models';
+import {
+  AllQueryParams,
+  NewBlogParams,
+  ReactionType,
+  UpdateBlogParams,
+} from '../../types';
+import { getPagination, getPagingData } from './helper';
+import { Op, literal } from 'sequelize';
+import fs from 'fs';
+import { SRC_DIR } from '../../index';
+import sharp from 'sharp';
+import { PORT } from '../../config';
 
 /**
  * Reaction count subquery
@@ -12,9 +23,9 @@ import { NewBlogType, UpdateBlogType, ReactionType } from '../../types';
 const reactionCountSubQuery = (reactionType: ReactionType) => {
   return sequelize.literal(`(
     SELECT COUNT(*)::int
-    FROM reaction AS reaction
+    FROM reaction
     WHERE
-        reaction.blog_id = "blog".blog_id
+        reaction.blog_id = "Blog".blog_id
         AND
         reaction.reaction_type ='${reactionType}')`);
 };
@@ -26,19 +37,32 @@ const reactionCountSubQuery = (reactionType: ReactionType) => {
 const ratingCountSubQuery = (slug: string, rating: number) => {
   return sequelize.literal(`(
     SELECT COUNT(*)::int
-    FROM blogs AS "blog"
-    LEFT JOIN comments AS "comments" ON "blog".blog_id = "comments".blog_id
-    LEFT JOIN ratings AS ratings ON "comments".comment_id = ratings.comment_id
-    WHERE "blog".slug = '${slug}'
+    FROM blogs
+    LEFT JOIN comments ON blogs.blog_id = comments.blog_id
+    LEFT JOIN ratings ON comments.comment_id = ratings.comment_id
+    WHERE blogs.slug = '${slug}'
       AND ratings.rating ='${rating}')`);
 };
+
+interface BlogParams {
+  slug: string;
+}
 
 /**
  * Get a blog
  */
-const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
+const getBlog: RequestHandler<BlogParams> = async (
+  req,
+  res,
+  next: NextFunction
+) => {
   try {
-    const { slug } = req.params as { slug: string };
+    const { slug } = req.params;
+    let where = {};
+    where = { published: true };
+    if (req.session.data !== undefined) {
+      where = req.session.data.role === 'admin' ? {} : where;
+    }
 
     const blog = await Blog.findOne({
       attributes: [
@@ -86,11 +110,11 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
             'content',
             'updatedAt',
           ],
-          where: { published: true, passive: false },
+          where,
           required: false,
         },
       ],
-      where: { slug, published: true, passive: false },
+      where: { slug, ...where },
       order: [['updatedAt', 'DESC']],
     });
 
@@ -107,20 +131,60 @@ const getBlog: RequestHandler = async (req, res, next: NextFunction) => {
 /**
  * Get all blogs
  */
-const getAllBlogs: RequestHandler = async (_req, res, next: NextFunction) => {
+const getAllBlogs: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  AllQueryParams
+> = async (req, res, next: NextFunction) => {
   try {
-    const blogs = await Blog.findAll({
+    const { page, columnName, columnValue, orderBy, orderDir } = req.query;
+    const pageNumber = Number(page);
+
+    let where;
+    let order: [[string, string]] = [['updatedAt', 'DESC']];
+
+    where = { [Op.and]: { published: true } };
+
+    if (columnName && columnValue) {
+      where = {
+        [columnName]: { [Op.iLike]: `%${columnValue}%` },
+        [Op.and]: { published: true },
+      };
+    }
+
+    if (orderBy && orderDir) {
+      order = [[String(orderBy), String(orderDir)]];
+    }
+
+    const { limit, offset } = getPagination(pageNumber);
+
+    const blogsData = await Blog.findAndCountAll({
       attributes: [
         'blogId',
         'title',
-        [sequelize.fn('LEFT', sequelize.col('content'), 50), 'content'], // Return first n characters in the string
+        [
+          literal(
+            "substring(regexp_replace(content, '<[^>]+>', '', 'g'), 1, 100)"
+          ),
+          'content',
+        ],
+        // [sequelize.fn('LEFT', sequelize.col('content'), 50), 'content'], // Return first n characters in the string
         'slug',
+        'updatedAt',
+        'published',
       ],
-      include: { model: User, attributes: ['name', 'email', 'userId'] },
-      where: { published: true },
-      order: [['updatedAt', 'DESC']],
+      include: {
+        model: User,
+        attributes: ['name', 'email', 'userId', 'imageId'],
+      },
+      where,
+      order,
+      offset,
+      limit,
     });
-    res.json(blogs);
+
+    res.json(getPagingData(blogsData, pageNumber));
   } catch (error: unknown) {
     next(error);
   }
@@ -130,12 +194,16 @@ const getAllBlogs: RequestHandler = async (_req, res, next: NextFunction) => {
  * Create new Blog
  * only admin and authors can create blog (checked through isAdminOrAuthor middleware)
  */
-const create: RequestHandler = async (req, res, next: NextFunction) => {
+const create: RequestHandler<unknown, unknown, NewBlogParams> = async (
+  req,
+  res,
+  next: NextFunction
+) => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const userId = req.session.data!.userId;
 
-    const { title, content, published, slug } = req.body as NewBlogType;
+    const { title, content, published, slug } = req.body;
     const blog = await Blog.create(
       {
         userId,
@@ -158,13 +226,16 @@ const create: RequestHandler = async (req, res, next: NextFunction) => {
  * Update Blog
  * only admin and authors can update blog (checked through isAdminOrAuthor middleware)
  */
-const update: RequestHandler = async (req, res, next: NextFunction) => {
+const update: RequestHandler<unknown, unknown, UpdateBlogParams> = async (
+  req,
+  res,
+  next: NextFunction
+) => {
   try {
     const sessionData = req.session.data;
 
     const blog = req.blog as Blog;
-    const { title, content, slug, published, userId } =
-      req.body as UpdateBlogType;
+    const { title, content, slug, published, userId } = req.body;
 
     // only admin can change the user
     const updateUserId = sessionData?.role === 'admin' ? userId : blog.userId;
@@ -189,7 +260,8 @@ const update: RequestHandler = async (req, res, next: NextFunction) => {
 const toggle: RequestHandler = async (req, res, next: NextFunction) => {
   try {
     const sessionData = req.session.data;
-    const blog = req.blog as Blog;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const blog = req.blog!;
 
     // only admin and blog creator can deactivate /activate the blog
     const hasAccess =
@@ -208,10 +280,61 @@ const toggle: RequestHandler = async (req, res, next: NextFunction) => {
   }
 };
 
+const uploadImage: RequestHandler = async (req, res, next: NextFunction) => {
+  try {
+    const blogImage = req.file;
+
+    // Insert image
+    let inPostImageDestinationPath: string | undefined = undefined;
+    const imageId = crypto.randomUUID();
+
+    if (blogImage) {
+      const dir = `${SRC_DIR}/../uploads/blogs`;
+
+      if (!fs.existsSync(dir)) {
+        await fs.promises.mkdir(dir, { recursive: true });
+      }
+
+      inPostImageDestinationPath = `/uploads/blogs/${imageId}.png`;
+
+      // TODO: delete all image of same blog before uploading
+
+      await sharp(blogImage.buffer)
+        .resize({
+          fit: sharp.fit.cover,
+          withoutEnlargement: true,
+          width: 800,
+        })
+        .png({
+          // https://sharp.pixelplumbing.com/api-output#png
+          compressionLevel: 7,
+          palette: true,
+          quality: 85, // play around with this number until you get the file size you want
+        })
+        .toFile('./' + inPostImageDestinationPath);
+
+      await Image.create({
+        name: imageId,
+        originalName: blogImage.originalname,
+        fileLocation: inPostImageDestinationPath,
+      });
+
+      // https://ckeditor.com/docs/ckeditor4/latest/guide/dev_file_upload.html#server-side-configuration
+      const imageUrl = `http://localhost:${PORT}/images/blogs/${imageId}.png`;
+      res
+        .status(200)
+        .json({ uploaded: 1, fileName: `${imageId}.png`, url: imageUrl }); // Send the image URL in the response
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getBlog,
   getAllBlogs,
   create,
   update,
   toggle,
+  uploadImage,
 };

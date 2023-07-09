@@ -10,12 +10,11 @@ export const blogFinder: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { id: blogId } = req.params as { id: string };
+    const { id: blogId } = req.params;
 
     const blog = await Blog.findOne({
       attributes: ['blogId', 'title', 'userId', 'content', 'slug', 'published'],
       where: { blogId },
-      order: [['updatedAt', 'DESC']],
     });
 
     if (!blog) {
@@ -35,7 +34,7 @@ export const blogFinder: RequestHandler = async (
 export const getUser = async (email: string) => {
   return await User.findOne({
     where: { email, isActive: true },
-    attributes: ['userId', 'name', 'email', 'passwordHash', 'role'],
+    attributes: ['userId', 'name', 'email', 'passwordHash', 'role', 'imageId'],
   });
 };
 
