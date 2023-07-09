@@ -1,11 +1,11 @@
 import { Formik, Form as FormikForm, Field } from 'formik';
 import * as Yup from 'yup';
 import PageTitle from '../../../components/PageTitle';
-import { ILogin } from '../../../types';
+import { LoginAttributes } from '../../../types';
 import { SubmitButton, InputField } from '../../../utils';
 
-interface ILoginFormProps {
-  onSubmit: (values: ILogin) => void;
+interface LoginFormProps {
+  onSubmit: (values: LoginAttributes) => void;
 }
 
 const INITIAL_VALUES = {
@@ -20,7 +20,7 @@ const VALIDATION_SCHEMA = Yup.object().shape({
   password: Yup.string().required('Password is required'),
 });
 
-const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   return (
     <div>
       <PageTitle title="Sign in" />

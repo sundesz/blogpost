@@ -1,4 +1,4 @@
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 
 /**
  * Type predicate to narrow an unknown error to `FetchBaseQueryError`
@@ -6,7 +6,7 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react'
 export function isFetchBaseQueryError(
   error: unknown
 ): error is FetchBaseQueryError {
-  return typeof error === 'object' && error != null && 'status' in error
+  return typeof error === 'object' && error != null && 'status' in error;
 }
 
 /**
@@ -20,5 +20,5 @@ export function isErrorWithMessage(
     error != null &&
     'message' in error &&
     typeof (error as any).message === 'string'
-  )
+  );
 }

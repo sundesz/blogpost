@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-import { INewUser } from '../../types';
+import { NewUser } from '../../types';
 import SignUpForm from './SignUpForm';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,9 +11,21 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [createUser] = useCreateUserMutation();
 
-  const onSubmit = async (newUserData: INewUser) => {
+  const onSubmit = async (newUserData: NewUser) => {
     try {
-      await createUser(newUserData).unwrap();
+      const formData = new FormData();
+
+      if (newUserData.image) {
+        formData.append('image', newUserData.image);
+      }
+
+      formData.append('name', newUserData.name);
+      formData.append('email', newUserData.email);
+      formData.append('password', newUserData.password);
+      formData.append('role', newUserData.role);
+
+      // If you need to access the error or success payload immediately after a mutation, you can chain .unwrap().
+      await createUser(formData).unwrap();
       toast.success(message.SUCCESS.CREATE_USER);
 
       navigate('/signin');

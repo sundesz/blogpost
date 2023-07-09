@@ -1,9 +1,9 @@
 import { apiSlice } from '../../app/api/apiSlice';
-import { IComment, ICreateUpdateCommentParams } from '../../types';
+import { Comment, CreateUpdateCommentParams } from '../../types';
 
 export const commentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createComment: builder.mutation<IComment, ICreateUpdateCommentParams>({
+    createComment: builder.mutation<Comment, CreateUpdateCommentParams>({
       query: (newComment) => ({
         url: `/comments/${newComment.blogId}`,
         method: 'POST',
@@ -17,7 +17,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Blog'],
     }),
 
-    updateComment: builder.mutation<IComment, ICreateUpdateCommentParams>({
+    updateComment: builder.mutation<Comment, CreateUpdateCommentParams>({
       query: (updateComment) => ({
         url: `/comments/${updateComment.commentId}`,
         method: 'PUT',
@@ -30,7 +30,7 @@ export const commentApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Comments'],
     }),
 
-    toggleComment: builder.mutation<IComment, ICreateUpdateCommentParams>({
+    toggleComment: builder.mutation<Comment, CreateUpdateCommentParams>({
       query: (updateComment) => ({
         url: `/comments/${updateComment.commentId}`,
         method: 'PUT',

@@ -1,4 +1,4 @@
-import { IBlog } from './blog';
+import { Blog } from './blog';
 
 export type ReactionType = 'thumbsUp' | 'wow' | 'heart';
 
@@ -8,13 +8,13 @@ export const reactionEmoji = {
   heart: '❤️',
 };
 
-export interface IReaction {
+export interface Reaction {
   thumbsUp: number;
   heart: number;
   wow: number;
 }
 
-export interface IUpdateReactionParams {
-  blogId: IBlog['blogId'];
+export interface UpdateReactionParams {
+  blogId: Blog['blogId'];
   reactionType: ReactionType;
 }

@@ -1,19 +1,38 @@
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { IBlog } from '../../types';
+import parse from 'html-react-parser';
+import { format } from 'date-fns';
+import { Blog } from '../../types';
+import AuthorImage from '../../components/AuthorImage';
 
-interface IBlogProps {
-  blog: IBlog;
+interface BlogProps {
+  blog: Blog;
+  isAuthorBlog?: boolean;
 }
 
-const ShortBlog: React.FC<IBlogProps> = ({ blog }) => {
+const ShortBlog: React.FC<BlogProps> = ({ blog, isAuthorBlog = false }) => {
   return (
-    <Card>
+    <Card className={blog.published ? '' : 'bg-warning'}>
       <Card.Body>
-        <Card.Title>{blog.title}</Card.Title>
-        <Card.Text>{blog.content}</Card.Text>
-        <Link to={`/blogs/${blog.slug}`}>Read more ...</Link>
+        <Card.Title>
+          <Link to={`/blogs/${blog.slug}`}>{blog.title}</Link>
+        </Card.Title>
+
+        <Card.Text>
+          <small>{format(new Date(blog.updatedAt!), 'dd LLLL yyyy')}</small>
+        </Card.Text>
+        <Card.Text>{parse(blog.content)}</Card.Text>
+        <Link to={`/blogs/${blog.slug}`}>
+          <small>Read more ...</small>
+        </Link>
       </Card.Body>
+      {!isAuthorBlog && (
+        <Card.Footer>
+          by&nbsp;&nbsp;
+          <AuthorImage author={blog.User} />
+          &nbsp;{blog.User.name}
+        </Card.Footer>
+      )}
     </Card>
   );
 };

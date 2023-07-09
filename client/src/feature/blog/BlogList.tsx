@@ -1,20 +1,12 @@
 import { Container } from 'react-bootstrap';
-import ErrorPage from '../../components/ErrorPage';
-import Loading from '../../components/Loading';
-import { useGetAllBlogQuery } from './blogApiSlice';
 import ShortBlog from './ShortBlog';
+import { Blog } from '../../types';
 
-const BlogList = () => {
-  const { data: blogs, isLoading, error, isError } = useGetAllBlogQuery();
+interface BlogListProps {
+  blogs: Blog[];
+}
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <ErrorPage error={error} />;
-  }
-
+const BlogList = ({ blogs }: BlogListProps) => {
   return (
     <Container className="blog-container py-5">
       {blogs && blogs.length ? (

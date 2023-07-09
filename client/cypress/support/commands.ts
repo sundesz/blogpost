@@ -1,4 +1,7 @@
 /// <reference types="cypress" />
+
+import { SignUp } from '../e2e/blogpost.cy';
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -36,6 +39,6 @@
 //   }
 // }
 
-Cypress.Commands.add('createUser', (signUpData) => {
+Cypress.Commands.add('createUser', (signUpData: SignUp) => {
   cy.request('POST', 'http://localhost:8080/api/v1/users', signUpData);
 });

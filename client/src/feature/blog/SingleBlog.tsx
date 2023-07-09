@@ -1,6 +1,6 @@
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { Container } from 'react-bootstrap';
-import nl2br from 'react-nl2br';
+import parse from 'html-react-parser';
 import { Link, useParams } from 'react-router-dom';
 import ErrorPage from '../../components/ErrorPage';
 import Loading from '../../components/Loading';
@@ -15,8 +15,13 @@ import ReactionButtons from './ReactionButtons';
 
 const SingleBlog: React.FC = () => {
   const user = useAppSelector(selectCurrentUser);
-  const { blogSlug } = useParams() as { blogSlug: string };
-  const { data: blog, isLoading, isError, error } = useGetBlogQuery(blogSlug);
+  const { slug } = useParams<{ slug: string }>();
+
+  if (!slug) {
+    return <Page404 />; // redirects to blog page
+  }
+
+  const { data: blog, isLoading, isError, error } = useGetBlogQuery(slug);
 
   if (isLoading) {
     return <Loading />;
@@ -33,25 +38,26 @@ const SingleBlog: React.FC = () => {
   // user is admin or logged in user create the blog
   const conditionForEdit =
     user.isAuthenticate &&
-    (user.role === 'admin' || blog.user.userId === user.userId);
+    (user.role === 'admin' || blog.User.userId === user.userId);
 
-  const isOwnBlog = user.userId === blog.user.userId;
+  const isOwnBlog = user.userId === blog.User.userId;
+  const unPublishedClass = blog.published ? '' : 'bg-warning';
 
   return (
-    <Container className="content-container py-5">
-      <PageTitle title={capitalize(blog.title)} />
+    <Container className={`content-container py-5 ${unPublishedClass}`}>
+      <PageTitle
+        title={capitalize(blog.title)}
+        divClass="mb-2"
+        displayClass="display-6"
+      />
 
-      <div className="">
-        <p className="lead mb-4">{nl2br(blog.content)}</p>
-      </div>
+      <div className="lead mb-4">{parse(blog.content)}</div>
       <div className="author-misc my-5">
         <div className="author-name">
-          by{' '}
-          <b>
-            <i>
-              <Link to={`/authors/${blog.user.userId}`}>{blog.user.name}</Link>
-            </i>
-          </b>
+          by &nbsp;
+          <Link to={`/authors/${blog.User.userId}`} className="by-author">
+            {blog.User.name}
+          </Link>
         </div>
         <div className="blog-date">
           updated {formatDistanceToNow(parseISO(blog.updatedAt!))} ago
@@ -65,7 +71,7 @@ const SingleBlog: React.FC = () => {
           {conditionForEdit && (
             <Link
               id="edit-btn"
-              to={`/blogs/update/${blogSlug}`}
+              to={`/blogs/update/${slug}`}
               state={{ blog }}
               className="btn btn-primary"
             >

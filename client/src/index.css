@@ -1,3 +1,8 @@
+:root {
+  --background-color: #8eac50;
+  --card-color: #cde990;
+}
+
 #app-name {
   font-weight: bold;
 }
@@ -13,9 +18,9 @@
   justify-content: center;
   align-items: center;
 }
-.right-side-link .nav-link .link-description {
+/* .right-side-link .nav-link .link-description {
   font-size: 12px;
-}
+} */
 
 .nav-link:hover,
 .nav-link:focus {
@@ -40,7 +45,25 @@
 
 .author-container .card,
 .blog-container .card {
+  background-color: var(--card-color);
   width: 25rem;
+}
+.author-container .card {
+  flex-direction: row;
+  align-items: center;
+}
+
+.author-container .card img,
+.blog-container .card img {
+  max-height: 100px;
+  padding-left: 15px;
+}
+
+.blog-container .card img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  padding: 0;
 }
 
 .blog-container .card a {
@@ -59,7 +82,7 @@
 .go-back {
   cursor: pointer;
   text-align: center;
-  color: #0d6efd;
+  color: #6527be;
 }
 
 .page-title {
@@ -99,10 +122,19 @@
 .comment {
   font-size: 0.9rem;
 }
+.comment-date {
+  font-style: italic;
+}
 
 .user-name,
 .commenter {
   text-transform: capitalize;
+  font-weight: bold;
+}
+
+.by-author {
+  font-weight: bold;
+  font-style: italic;
 }
 
 .comment-heading {
@@ -130,6 +162,9 @@ a {
 .progress {
   width: 150px;
 }
+.progress-bar {
+  color: #222 !important;
+}
 
 .crud-button {
   display: flex;
@@ -140,4 +175,48 @@ a {
   text-align: center;
   width: 100%;
   font-weight: bold;
+}
+
+.pagination .page-link {
+  cursor: pointer;
+}
+
+.page-header {
+  font-size: 2rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+#blog-content .ck-content.ck-editor__editable_inline {
+  height: 500px;
+}
+#comment-content .ck-content.ck-editor__editable_inline {
+  height: 250px;
+}
+
+.welcome-image {
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+}
+
+.username.navbar-text {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.search-filter .input-group,
+.search-filter .form-select {
+  flex: 1;
+}
+
+footer,
+.background-color {
+  background-color: var(--background-color);
+}
+
+.card-title {
+  text-transform: capitalize;
 }

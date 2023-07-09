@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <main className="page bg-lightgray">
+      <main className="page background-color">
         <Outlet />
       </main>
       <Footer />

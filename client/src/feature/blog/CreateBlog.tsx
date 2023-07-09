@@ -2,19 +2,20 @@ import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCreateBlogMutation } from './blogApiSlice';
-import { ICreateUpdateBlogParams } from '../../types';
+import { CreateUpdateBlogParams } from '../../types';
 import Loading from '../../components/Loading';
 import BlogForm from './BlogForm';
-import { useGetAllAuthorQuery } from '../author/authorApiSlice';
+// import { useGetAuthorNamesQuery } from '../authors/authorApiSlice';
 import slugify from 'slugify';
 import { slugifyOptions } from '../../config';
 import ErrorPage from '../../components/ErrorPage';
 import ErrorNotification from '../../utils/ErrorNotification';
 import { message } from '../../utils/notificationMessage';
+import { useGetAuthorNamesQuery } from '../author/authorApiSlice';
 
 const CreateBlog: React.FC = () => {
   const navigate = useNavigate();
-  const { data: authors, isLoading, isError, error } = useGetAllAuthorQuery();
+  const { data: authors, isLoading, isError, error } = useGetAuthorNamesQuery();
   const [createBlog] = useCreateBlogMutation();
 
   if (isLoading) {
@@ -25,7 +26,7 @@ const CreateBlog: React.FC = () => {
     return <ErrorPage error={error} />;
   }
 
-  const onSubmit = async (newBlogData: ICreateUpdateBlogParams) => {
+  const onSubmit = async (newBlogData: CreateUpdateBlogParams) => {
     try {
       const createdBlogSlug = await createBlog({
         ...newBlogData,

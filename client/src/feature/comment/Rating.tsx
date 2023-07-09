@@ -1,10 +1,10 @@
 import { Star, StarFill } from 'react-bootstrap-icons';
 
-interface IRatingProps {
+interface RatingProps {
   rating: number | undefined;
 }
 
-const Rating: React.FC<IRatingProps> = ({ rating }) => {
+const Rating: React.FC<RatingProps> = ({ rating }) => {
   if (!rating) {
     return null;
   }

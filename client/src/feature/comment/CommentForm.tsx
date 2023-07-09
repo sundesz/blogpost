@@ -3,14 +3,14 @@ import { Field, Form, Formik } from 'formik';
 import {
   SubmitButton,
   InputField,
-  TextAreaField,
   SelectField,
+  CommentField,
 } from '../../utils';
-import { ICreateUpdateCommentParams } from '../../types';
+import { CreateUpdateCommentParams } from '../../types';
 
-interface ICommentFormProps {
+interface CommentFormProps {
   blogId: string;
-  onSubmit: (values: ICreateUpdateCommentParams) => void;
+  onSubmit: (values: CreateUpdateCommentParams) => void;
 }
 
 const VALIDATION_SCHEMA = Yup.object().shape({
@@ -26,7 +26,7 @@ const VALIDATION_SCHEMA = Yup.object().shape({
     .oneOf([1, 2, 3, 4, 5], 'Rating is required'),
 });
 
-const CommentForm: React.FC<ICommentFormProps> = ({ blogId, onSubmit }) => {
+const CommentForm: React.FC<CommentFormProps> = ({ blogId, onSubmit }) => {
   const INITIAL_VALUES = {
     blogId,
     title: '',
@@ -57,11 +57,11 @@ const CommentForm: React.FC<ICommentFormProps> = ({ blogId, onSubmit }) => {
           />
 
           <Field
-            id="content"
+            id="comment-content"
             label="Content"
             name="content"
             placeholder="Comment ..."
-            component={TextAreaField}
+            component={CommentField}
             rows="5"
           />
 

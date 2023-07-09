@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageTitle from '../../components/PageTitle';
-import { IBlog, ICreateUpdateCommentParams } from '../../types';
+import { Blog, CreateUpdateCommentParams } from '../../types';
 import { capitalize } from '../../utils';
 import ErrorNotification from '../../utils/ErrorNotification';
 import { message } from '../../utils/notificationMessage';
@@ -12,9 +12,9 @@ import CommentForm from './CommentForm';
 const CreateComment = () => {
   const navigate = useNavigate();
   const [createComment] = useCreateCommentMutation();
-  let { state } = useLocation() as { state: { blog: IBlog } };
+  let { state } = useLocation() as { state: { blog: Blog } };
 
-  const onSubmit = async (commentData: ICreateUpdateCommentParams) => {
+  const onSubmit = async (commentData: CreateUpdateCommentParams) => {
     try {
       await createComment(commentData).unwrap();
       toast.success(message.SUCCESS.CREATE_COMMENT);

@@ -1,13 +1,13 @@
-import { Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap';
 
 const Footer = () => {
   return (
-    <footer className='footer-container-- py-5'>
+    <footer className="footer-container-- py-5">
       <Container>
-        <div className='text-center'>&copy; Sandesh Hyoju</div>
+        <div className="text-center">&copy; Sandesh Hyoju</div>
       </Container>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

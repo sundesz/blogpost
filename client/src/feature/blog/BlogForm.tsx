@@ -2,10 +2,10 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 
 import {
-  IAuthor,
+  AuthorNames,
   BlogCRUDType,
-  IBlog,
-  ICreateUpdateBlogParams,
+  Blog,
+  CreateUpdateBlogParams,
 } from '../../types';
 import { useAppSelector } from '../../hooks/reduxToolkit';
 import { selectCurrentUser } from '../auth/authSlice';
@@ -13,17 +13,17 @@ import Page404 from '../../components/Page404';
 import {
   SubmitButton,
   InputField,
-  TextAreaField,
   SelectField,
   capitalize,
+  BlogContentField,
 } from '../../utils';
 import PageTitle from '../../components/PageTitle';
 
-interface IBlogFormProps {
-  blog?: IBlog;
+interface BlogFormProps {
+  blog?: Blog;
   crudType: BlogCRUDType;
-  authors: IAuthor[];
-  onSubmit: (values: ICreateUpdateBlogParams) => void;
+  authors: AuthorNames[];
+  onSubmit: (values: CreateUpdateBlogParams) => void;
 }
 
 const VALIDATION_SCHEMA = Yup.object().shape({
@@ -36,7 +36,7 @@ const VALIDATION_SCHEMA = Yup.object().shape({
   author: Yup.string().required('Author is required'),
 });
 
-const BlogForm: React.FC<IBlogFormProps> = ({
+const BlogForm: React.FC<BlogFormProps> = ({
   blog,
   crudType,
   authors,
@@ -53,13 +53,17 @@ const BlogForm: React.FC<IBlogFormProps> = ({
     slug: '',
     content: crudType === 'update' ? blog!.content : '',
     published: crudType === 'update' ? blog!.published : true,
-    author: crudType === 'update' ? blog!.user.userId : user.userId,
+    author: crudType === 'update' ? blog!.User.userId : user.userId,
   };
 
   const authorOptions = authors.map((author) => ({
     name: capitalize(author.name),
     value: author.userId,
   }));
+
+  const isAdmin = user.role === 'admin';
+  const isOwnBlog = crudType === 'update' && blog!.User.email === user.email;
+  const hasPermission = isAdmin ? true : isOwnBlog ? true : false;
 
   return (
     <div>
@@ -77,17 +81,20 @@ const BlogForm: React.FC<IBlogFormProps> = ({
             name="title"
             placeholder="Title"
             component={InputField}
+            gridLeft="2"
+            gridRight="10"
           />
 
           <Field
-            id="content"
+            id="blog-content"
             label="Content"
             name="content"
-            placeholder="Blog content ..."
-            component={TextAreaField}
+            component={BlogContentField}
+            gridLeft="2"
+            gridRight="10"
           />
 
-          {user.role === 'admin' && (
+          {hasPermission && (
             <Field
               id="published"
               label="Published"
@@ -95,23 +102,29 @@ const BlogForm: React.FC<IBlogFormProps> = ({
               type="checkbox"
               bootstrapClass="form-check checkbox"
               component={InputField}
+              gridLeft="2"
+              gridRight="10"
             />
           )}
 
-          {user.role === 'admin' && (
+          {hasPermission && (
             <Field
               name="author"
               id="author"
               label="Author"
               selectOptions={authorOptions}
               component={SelectField}
-              disabledValue={user.role !== 'admin'}
+              disabledValue={!hasPermission}
+              gridLeft="2"
+              gridRight="10"
             />
           )}
 
           <SubmitButton
             id={`${crudType}-blog-btn`}
             name={capitalize(crudType)}
+            gridLeft={2}
+            gridRight={10}
           />
         </Form>
       </Formik>

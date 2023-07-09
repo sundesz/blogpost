@@ -1,13 +1,13 @@
 import { apiSlice } from '../../app/api/apiSlice';
-import { INewUser, INewUserResponse } from '../../types';
+import { NewUserResponse } from '../../types';
 
 export const signupApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createUser: builder.mutation<INewUserResponse, INewUser>({
-      query: (newUserData) => ({
+    createUser: builder.mutation<NewUserResponse, FormData>({
+      query: (formData) => ({
         url: '/users',
         method: 'POST',
-        body: { ...newUserData },
+        body: formData,
       }),
     }),
   }),

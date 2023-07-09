@@ -5,19 +5,19 @@ import Page404 from './components/Page404';
 import Login from './feature/auth/Login';
 import Logout from './feature/auth/Logout';
 import RequireAuth from './feature/auth/RequireAuth';
-import BlogList from './feature/blog/BlogList';
-import CreateBlog from './feature/blog/CreateBlog';
-import SingleBlog from './feature/blog/SingleBlog';
-import UpdateBlog from './feature/blog/UpdateBlog';
 import Home from './feature/home/Home';
 import SignUp from './feature/signup/SignUp';
-import 'react-toastify/dist/ReactToastify.css';
 import RequireNoAuth from './feature/auth/RequireNoAuth';
-import AuthorList from './feature/author/AuthorList';
-import SingleAuthor from './feature/author/SingleAuthor';
 import CreateComment from './feature/comment/CreateComment';
 import SingleUser from './feature/user/SingleUser';
 import SingleComment from './feature/comment/SingleComment';
+import 'react-toastify/dist/ReactToastify.css';
+import Blogs from './feature/blog';
+import SingleBlog from './feature/blog/SingleBlog';
+import Authors from './feature/author';
+import SingleAuthor from './feature/author/SingleAuthor';
+import CreateBlog from './feature/blog/CreateBlog';
+import UpdateBlog from './feature/blog/UpdateBlog';
 
 const App = () => {
   return (
@@ -32,12 +32,12 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="blogs">
-            <Route index element={<BlogList />} />
-            <Route path=":blogSlug" element={<SingleBlog />} />
+            <Route index element={<Blogs />} />
+            <Route path=":slug" element={<SingleBlog />} />
           </Route>
 
           <Route path="authors">
-            <Route index element={<AuthorList />} />
+            <Route index element={<Authors />} />
             <Route path=":authorId" element={<SingleAuthor />} />
           </Route>
           <Route path="users/:userId" element={<SingleUser />} />
@@ -56,7 +56,7 @@ const App = () => {
           <Route element={<RequireAuth />}>
             <Route path="blogs">
               <Route path="new" element={<CreateBlog />} />
-              <Route path="update/:blogSlug" element={<UpdateBlog />} />
+              <Route path="update/:slug" element={<UpdateBlog />} />
             </Route>
             <Route path="/signout" element={<Logout />} />
           </Route>

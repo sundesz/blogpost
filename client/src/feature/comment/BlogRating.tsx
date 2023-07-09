@@ -1,14 +1,14 @@
 import { ProgressBar } from 'react-bootstrap';
 import { StarFill } from 'react-bootstrap-icons';
-import { IBlogRating } from '../../types';
+import { BlogRatingAttributes } from '../../types';
 
-interface IRatingProps {
+interface RatingProps {
   displayNumber: string;
   blogRating: number;
   totalRating: number;
 }
 
-const Rating: React.FC<IRatingProps> = ({
+const Rating: React.FC<RatingProps> = ({
   displayNumber,
   blogRating,
   totalRating,
@@ -30,11 +30,11 @@ const Rating: React.FC<IRatingProps> = ({
   );
 };
 
-interface IBlogRatingProps {
-  blogRating: IBlogRating;
+interface BlogRatingProps {
+  blogRating: BlogRatingAttributes;
 }
 
-const BlogRating: React.FC<IBlogRatingProps> = ({ blogRating }) => {
+const BlogRating: React.FC<BlogRatingProps> = ({ blogRating }) => {
   const totalRating =
     blogRating.rating1 +
     blogRating.rating2 +

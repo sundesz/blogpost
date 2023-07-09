@@ -7,6 +7,23 @@ import { selectCurrentUser } from '../../feature/auth/authSlice';
 const Navigation: React.FC = (): JSX.Element => {
   const user = useAppSelector(selectCurrentUser);
 
+  const userInfo = (
+    <>
+      {user.profilePic && (
+        <img
+          src={user.profilePic}
+          alt={`Welcome ${user.email}`}
+          title={`Welcome ${user.email}`}
+          className="welcome-image"
+        />
+      )}
+      <div>
+        <div>Welcome</div>
+        <div className="font-weight-bold">{user.email}</div>
+      </div>
+    </>
+  );
+
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -37,10 +54,7 @@ const Navigation: React.FC = (): JSX.Element => {
           {user.isAuthenticate ? (
             <>
               <Nav>
-                <Navbar.Text className="px-3">
-                  <div>Welcome</div>
-                  <div className="font-weight-bold">{user.email}</div>
-                </Navbar.Text>
+                <Navbar.Text className="px-3 username">{userInfo}</Navbar.Text>
                 <Nav.Link
                   id="signout-link"
                   as={Link}

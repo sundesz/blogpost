@@ -1,56 +1,67 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { ILoginResponse, UserRoleType } from '../../types';
-import { BASE_URL } from '../../app/api/apiSlice';
+import { LoginResponse, UserRoleType } from '../../types';
+import { BACKEND_BASE_URL, PROFILE_IMAGE } from '../../config';
 
-export interface IAuthState {
+export interface AuthState {
   isAuthenticated: boolean;
   userId: string;
   email: string;
   name: string;
   role: UserRoleType | null;
+  profilePic: string | null;
 }
 
-const initialState: IAuthState = {
+const initialState: AuthState = {
   isAuthenticated: false,
   userId: '',
   email: '',
   name: '',
   role: null,
+  profilePic: '',
 };
 
-export interface IUnknownError {
+export interface UnknownError {
   message: string;
 }
 
 export const refetchSession = createAsyncThunk<
-  ILoginResponse,
+  LoginResponse,
   undefined,
-  { rejectValue: IUnknownError }
+  { rejectValue: UnknownError }
 >('auth/session', async (_, thunkApi) => {
-  const response = await fetch(`${BASE_URL}/session`);
+  const response = await fetch(`${BACKEND_BASE_URL}/session`);
 
   if (response.status !== 200) {
     return thunkApi.rejectWithValue({
       message: 'Failed to fetch',
-    } as IUnknownError);
+    } as UnknownError);
   }
 
-  const sessionData = (await response.json()) as {
+  const sessionData: {
     status: boolean;
-    data: ILoginResponse;
-  };
+    data: LoginResponse;
+  } = await response.json();
 
   if (sessionData.status) {
-    return { ...sessionData.data, isAuthenticated: true };
+    const profilePic = sessionData.data.profilePic
+      ? `${PROFILE_IMAGE}/${sessionData.data.profilePic}.png`
+      : null;
+
+    return {
+      ...sessionData.data,
+      isAuthenticated: true,
+      profilePic,
+    };
   } else {
     return {
       userId: '',
       email: '',
       name: '',
-      role: 'user' as UserRoleType,
+      role: 'user',
       isAuthenticated: false,
+      profilePic: '',
     };
   }
 });
@@ -59,14 +70,15 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<ILoginResponse>) => {
-      const { userId, email, name, role } = action.payload;
+    setCredentials: (state, action: PayloadAction<LoginResponse>) => {
+      const { userId, email, name, role, profilePic } = action.payload;
 
       state.isAuthenticated = true;
       state.userId = userId;
       state.email = email;
       state.name = name;
-      state.role = role as UserRoleType;
+      state.role = role;
+      state.profilePic = profilePic;
     },
 
     logOut: (state) => {
@@ -76,13 +88,15 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       refetchSession.fulfilled,
-      (state: IAuthState, action: PayloadAction<ILoginResponse>) => {
-        const { isAuthenticated, userId, name, email, role } = action.payload;
+      (state: AuthState, action: PayloadAction<LoginResponse>) => {
+        const { isAuthenticated, userId, name, email, role, profilePic } =
+          action.payload;
         state.isAuthenticated = isAuthenticated!;
         state.userId = userId;
         state.email = email;
         state.name = name;
-        state.role = role as UserRoleType;
+        state.role = role;
+        state.profilePic = profilePic;
       }
     );
   },
@@ -98,4 +112,5 @@ export const selectCurrentUser = (state: RootState) => ({
   name: state.auth.name,
   userId: state.auth.userId,
   role: state.auth.role,
+  profilePic: state.auth.profilePic,
 });

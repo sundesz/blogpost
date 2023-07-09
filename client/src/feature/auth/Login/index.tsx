@@ -1,7 +1,7 @@
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../hooks/reduxToolkit';
-import { ILogin } from '../../../types';
+import { LoginAttributes } from '../../../types';
 import ErrorNotification from '../../../utils/ErrorNotification';
 import { message } from '../../../utils/notificationMessage';
 import { useLoginMutation } from '../authApiSlice';
@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
 
-  const handleSubmit = async (credentials: ILogin) => {
+  const handleSubmit = async (credentials: LoginAttributes) => {
     try {
       const userData = await login(credentials).unwrap();
 

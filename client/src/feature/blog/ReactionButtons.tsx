@@ -1,18 +1,18 @@
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { IBlog, reactionEmoji, ReactionType } from '../../types';
+import { Blog, reactionEmoji, ReactionType } from '../../types';
 import ErrorNotification from '../../utils/ErrorNotification';
 import { message } from '../../utils/notificationMessage';
 import { useUpdateReactionMutation } from './blogApiSlice';
 
-interface IReactionButtonsProps {
-  blog: IBlog;
+interface ReactionButtonsProps {
+  blog: Blog;
   isOwnBlog: boolean;
 }
 
-const ReactionButtons = ({ blog, isOwnBlog }: IReactionButtonsProps) => {
+const ReactionButtons = ({ blog, isOwnBlog }: ReactionButtonsProps) => {
   const [updateReaction] = useUpdateReactionMutation();
-  const reactionHandler = async (blog: IBlog, reactionType: ReactionType) => {
+  const reactionHandler = async (blog: Blog, reactionType: ReactionType) => {
     if (isOwnBlog) {
       return false;
     }
@@ -21,7 +21,8 @@ const ReactionButtons = ({ blog, isOwnBlog }: IReactionButtonsProps) => {
       await updateReaction({
         blogId: blog.blogId,
         reactionType,
-      });
+      }).unwrap();
+
       toast.success(`${reactionEmoji[reactionType]} reacted successfully.`);
     } catch (error) {
       ErrorNotification(error, message.FAILED.REACTION);
