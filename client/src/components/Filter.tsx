@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { Button, Stack } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
 import { useAppSelector } from '../hooks/reduxToolkit';
 import { selectCurrentUser } from '../feature/auth/authSlice';
+import useNavigateSearch from '../hooks/useNavigateSearch';
 
 type SelectOptions = { [key: string]: string };
 
@@ -28,7 +28,7 @@ const Filter = ({
   filterOptions,
   setPage,
 }: FilterProps) => {
-  const navigate = useNavigate();
+  const navigateSearch = useNavigateSearch();
   const user = useAppSelector(selectCurrentUser);
 
   const inputFilterRef = useRef<HTMLInputElement>(null);
@@ -41,14 +41,18 @@ const Filter = ({
     const orderBy = orderValue.substring(0, lastIndex);
     const orderDir = orderValue.substring(lastIndex + 1);
 
-    const searchColumn = selectFilterRef.current?.value;
-    const searchValue = inputFilterRef.current?.value;
+    const columnName = selectFilterRef.current?.value;
+    const columnValue = inputFilterRef.current?.value;
+
+    const searchParams = {
+      columnName: columnName ?? '',
+      columnValue: columnValue ?? '',
+      orderBy,
+      orderDir,
+    };
 
     setPage(() => 1);
-    navigate({
-      pathname: `/${pageType}`,
-      search: `?columnName=${searchColumn}&columnValue=${searchValue}&orderBy=${orderBy}&orderDir=${orderDir}`,
-    });
+    navigateSearch(`/${pageType}`, searchParams);
   };
 
   const orderValue =
@@ -76,15 +80,17 @@ const Filter = ({
     if (!inputFilterRef.current || !selectFilterRef.current) {
       return false;
     }
-    const searchValue = inputFilterRef.current.value;
-    const searchColumn = selectFilterRef.current?.value;
+    const columnValue = inputFilterRef.current.value;
+    const columnName = selectFilterRef.current?.value;
 
     if (filterText.trim()) {
       setPage(() => 1);
-      navigate({
-        pathname: `/${pageType}`,
-        search: `?columnName=${searchColumn}&columnValue=${searchValue}`,
-      });
+
+      const searchParams = {
+        columnName: columnName ?? '',
+        columnValue: columnValue ?? '',
+      };
+      navigateSearch(`/${pageType}`, searchParams);
     }
   };
 
@@ -94,15 +100,16 @@ const Filter = ({
     if (!inputFilterRef.current || !selectFilterRef.current) {
       return false;
     }
-    const searchValue = inputFilterRef.current?.value;
-    const searchColumn = selectFilterRef.current?.value;
+    const columnValue = inputFilterRef.current?.value;
+    const columnName = selectFilterRef.current?.value;
     if (e.key === 'Enter') {
       setPage(() => 1);
 
-      navigate({
-        pathname: `/${pageType}`,
-        search: `?columnName=${searchColumn}&columnValue=${searchValue}`,
-      });
+      const searchParams = {
+        columnName: columnName ?? '',
+        columnValue: columnValue ?? '',
+      };
+      navigateSearch(`/${pageType}`, searchParams);
     }
   };
 
@@ -116,7 +123,7 @@ const Filter = ({
         <Button
           id="createNew"
           variant="primary"
-          onClick={() => navigate(`/${pageType}/new`)}
+          onClick={() => navigateSearch(`/${pageType}/new`, {})}
         >
           Create new
         </Button>

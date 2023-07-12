@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import { useSearchQuery } from '../hooks/useSearchQuery';
 import { PageType } from '../types';
 import { generatePagination } from '../utils';
+import useNavigateSearch from '../hooks/useNavigateSearch';
 
 interface IAppPaginationProps {
   pageType: PageType;
@@ -16,25 +16,22 @@ const AppPagination = ({
   totalPage,
   setPage,
 }: IAppPaginationProps) => {
-  const navigate = useNavigate();
+  const navigateSearch = useNavigateSearch();
+
   const { filterName, filterValue, orderBy, orderDir } = useSearchQuery({});
 
   const paginationPages = generatePagination(currentPage, totalPage);
 
-  const getPaginationUrl = (
-    pageType: PageType,
-    pageNumber: string | number
-  ) => {
-    if (typeof pageNumber === 'number') {
-      return `/${pageType}/?page=${pageNumber}&name=${filterName}&value=${filterValue}&orderBy=${orderBy}&orderDir=${orderDir}`;
-    }
-    return '#';
-  };
-
   const spanClickHandler = (pageNumber: number | string) => {
     if (typeof pageNumber !== 'string' && currentPage !== pageNumber) {
       setPage(() => pageNumber);
-      navigate(getPaginationUrl(pageType, pageNumber));
+      navigateSearch(`/${pageType}`, {
+        page: String(pageNumber) ?? '1',
+        columnName: filterName ?? '',
+        columnValue: filterValue ?? '',
+        orderBy: orderBy ?? '',
+        orderDir: orderDir ?? '',
+      });
     }
   };
 
