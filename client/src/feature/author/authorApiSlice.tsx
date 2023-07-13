@@ -37,9 +37,19 @@ export const authorApiSlice = apiSlice.injectEndpoints({
      */
     getAllAuthor: builder.query<PaginationResponse<Author>, GetAllRequestQuery>(
       {
-        query: ({ page, orderBy, orderDir, filterName, filterValue }) => ({
-          url: `authors?page=${page}&orderBy=${orderBy}&orderDir=${orderDir}&columnName=${filterName}&columnValue=${filterValue}`,
-        }),
+        query: ({ page, orderBy, orderDir, filterName, filterValue }) => {
+          return {
+            url: 'authors/',
+            params: {
+              page,
+              columnName: filterName,
+              columnValue: filterValue,
+              orderBy,
+              orderDir,
+            },
+          };
+        },
+
         transformResponse: (responseData: PaginationResponse<Author>) => {
           const { data, ...rest } = responseData;
           const dataWithProfilePic: Author[] = data.map((author) => {
