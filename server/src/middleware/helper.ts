@@ -70,12 +70,12 @@ export const isAdminOrAuthor: RequestHandler = (
       return res.status(401).end();
     }
 
-    if (
-      !(
-        req.session.data?.role === 'admin' ||
-        req.session.data?.role === 'author'
-      )
-    ) {
+    if (!req.session.data) {
+      return res.status(401).end();
+    }
+
+    const UserType = ['admin', 'author'];
+    if (!UserType.includes(req.session.data.role)) {
       return res.status(403).end();
     }
 
@@ -90,11 +90,15 @@ export const isAdminOrAuthor: RequestHandler = (
  */
 export const isAdmin: RequestHandler = (req, res, next: NextFunction) => {
   try {
-    if (!req.session.data?.userId) {
+    if (!req.session.data) {
       return res.status(401).end();
     }
 
-    if (req.session.data?.role !== 'admin') {
+    if (!req.session.data.userId) {
+      return res.status(401).end();
+    }
+
+    if (req.session.data.role !== 'admin') {
       return res.status(403).end();
     }
 
@@ -109,11 +113,15 @@ export const isAdmin: RequestHandler = (req, res, next: NextFunction) => {
  */
 export const isAuthor: RequestHandler = (req, res, next: NextFunction) => {
   try {
-    if (!req.session.data?.userId) {
+    if (!req.session.data) {
       return res.status(401).end();
     }
 
-    if (req.session.data?.role !== 'author') {
+    if (!req.session.data.userId) {
+      return res.status(401).end();
+    }
+
+    if (req.session.data.role !== 'author') {
       return res.status(403).end();
     }
 

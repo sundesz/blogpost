@@ -260,8 +260,11 @@ const update: RequestHandler<unknown, unknown, UpdateBlogParams> = async (
 const toggle: RequestHandler = async (req, res, next: NextFunction) => {
   try {
     const sessionData = req.session.data;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const blog = req.blog!;
+    const blog = req.blog;
+
+    if (!blog) {
+      return res.status(403).end();
+    }
 
     // only admin and blog creator can deactivate /activate the blog
     const hasAccess =
