@@ -8,7 +8,7 @@ export interface BlogResponse {
   content: string;
   slug: string;
   published: boolean;
-  updatedAt?: string;
+  updatedAt: string;
   thumbsUp?: number;
   wow?: number;
   heart?: number;

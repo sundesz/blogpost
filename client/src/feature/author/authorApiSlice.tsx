@@ -29,7 +29,7 @@ export const authorApiSlice = apiSlice.injectEndpoints({
      */
     getAuthorNames: builder.query<AuthorNames[], void>({
       query: () => `/authors/names`,
-      providesTags: ['Author'],
+      providesTags: ['AuthorName'],
     }),
 
     /**

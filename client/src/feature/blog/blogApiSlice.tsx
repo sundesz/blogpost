@@ -118,7 +118,7 @@ export const blogApiSlice = apiSlice.injectEndpoints({
           reactionType: blog.reactionType,
         },
       }),
-      invalidatesTags: ['Blog'],
+      invalidatesTags: ['Blogs', 'Blog'],
     }),
   }),
 });
