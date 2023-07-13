@@ -87,10 +87,6 @@ app.get('/', (req: Request, res: Response) => {
   }
 });
 
-app.get('/ping', (_req: Request, res: Response) => {
-  res.send('pong');
-});
-
 app.use('/api/v1/users', routers.user);
 app.use('/api/v1/authors', routers.author);
 app.use('/api/v1/blogs', routers.blog);
