@@ -60,7 +60,7 @@ const SingleBlog: React.FC = () => {
           </Link>
         </div>
         <div className="blog-date">
-          updated {formatDistanceToNow(parseISO(blog.updatedAt!))} ago
+          updated {formatDistanceToNow(parseISO(blog.updatedAt))} ago
         </div>
       </div>
 

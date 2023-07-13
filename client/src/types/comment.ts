@@ -6,7 +6,7 @@ export interface Comment {
   blogId: string;
   title: string;
   content: string;
-  updatedAt?: string;
+  updatedAt: string;
   user: User | null;
   rating: Rating | null;
 }

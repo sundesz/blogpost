@@ -28,7 +28,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({ comment }) => {
           <span className="commenter">{renderCommenter()}</span>
           &nbsp;&nbsp;
           <span className="comment-date">
-            commented on {formatDistanceToNow(parseISO(comment.updatedAt!))} ago
+            commented on {formatDistanceToNow(parseISO(comment.updatedAt))} ago
           </span>
         </div>
         <div className="comment-heading">

@@ -19,7 +19,7 @@ const ShortBlog: React.FC<BlogProps> = ({ blog, isAuthorBlog = false }) => {
         </Card.Title>
 
         <Card.Text>
-          <small>{format(new Date(blog.updatedAt!), 'dd LLLL yyyy')}</small>
+          <small>{format(new Date(blog.updatedAt), 'dd LLLL yyyy')}</small>
         </Card.Text>
         <Card.Text>{parse(blog.content)}</Card.Text>
         <Link to={`/blogs/${blog.slug}`}>

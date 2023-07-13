@@ -27,7 +27,7 @@ export interface Blog {
   content: string;
   slug: string;
   published: boolean;
-  updatedAt?: string;
+  updatedAt: string;
   User: Author;
   reaction: Reaction;
   Comments: Comment[];
