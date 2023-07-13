@@ -41,12 +41,9 @@ const Filter = ({
     const orderBy = orderValue.substring(0, lastIndex);
     const orderDir = orderValue.substring(lastIndex + 1);
 
-    const columnName = selectFilterRef.current?.value;
-    const columnValue = inputFilterRef.current?.value;
-
     const searchParams = {
-      columnName: columnName ?? '',
-      columnValue: columnValue ?? '',
+      columnName: selectFilterRef.current?.value ?? '',
+      columnValue: inputFilterRef.current?.value ?? '',
       orderBy,
       orderDir,
     };
@@ -80,15 +77,13 @@ const Filter = ({
     if (!inputFilterRef.current || !selectFilterRef.current) {
       return false;
     }
-    const columnValue = inputFilterRef.current.value;
-    const columnName = selectFilterRef.current?.value;
 
     if (filterText.trim()) {
       setPage(() => 1);
 
       const searchParams = {
-        columnName: columnName ?? '',
-        columnValue: columnValue ?? '',
+        columnName: selectFilterRef.current?.value ?? '',
+        columnValue: inputFilterRef.current.value ?? '',
       };
       navigateSearch(`/${pageType}`, searchParams);
     }
@@ -100,14 +95,13 @@ const Filter = ({
     if (!inputFilterRef.current || !selectFilterRef.current) {
       return false;
     }
-    const columnValue = inputFilterRef.current?.value;
-    const columnName = selectFilterRef.current?.value;
+
     if (e.key === 'Enter') {
       setPage(() => 1);
 
       const searchParams = {
-        columnName: columnName ?? '',
-        columnValue: columnValue ?? '',
+        columnName: selectFilterRef.current?.value ?? '',
+        columnValue: inputFilterRef.current?.value ?? '',
       };
       navigateSearch(`/${pageType}`, searchParams);
     }
