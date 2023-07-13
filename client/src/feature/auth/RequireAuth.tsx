@@ -7,15 +7,11 @@ const RequireAuth = () => {
   const user = useAppSelector(selectCurrentUser);
   const location = useLocation();
 
-  // if (!user.isAuthenticate) {
-  //   toast.warn('Authentication required');
-  // }
+  if (!user.isAuthenticate) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
 
-  return user.isAuthenticate ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/signin" state={{ from: location }} replace />
-  );
+  return <Outlet />;
 };
 
 export default RequireAuth;

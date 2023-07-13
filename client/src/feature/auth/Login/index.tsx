@@ -25,11 +25,15 @@ const Login: React.FC = () => {
     }
   };
 
-  return (
-    <Container className="content-container py-5">
-      {isLoading ? <h1>Loading ...</h1> : <LoginForm onSubmit={handleSubmit} />}
-    </Container>
-  );
+  const render = () => {
+    if (!isLoading) {
+      return <LoginForm onSubmit={handleSubmit} />;
+    }
+
+    return <h1>Loading ...</h1>;
+  };
+
+  return <Container className="content-container py-5">{render()}</Container>;
 };
 
 export default Login;

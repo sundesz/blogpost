@@ -37,7 +37,11 @@ const Blogs = () => {
   }
 
   if (!blogData?.data) {
-    return <div>No data </div>;
+    return (
+      <Container className="blog-container py-5">
+        <div>No data </div>
+      </Container>
+    );
   }
 
   const orderOptions = {

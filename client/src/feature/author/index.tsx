@@ -36,7 +36,11 @@ const Authors = () => {
   }
 
   if (!authorData?.data) {
-    return <div>No data </div>;
+    return (
+      <Container className="author-container py-5">
+        <div>No data </div>
+      </Container>
+    );
   }
 
   const orderOptions = {
