@@ -3,7 +3,7 @@ import session from 'express-session';
 import SequelizeStore from 'connect-session-sequelize';
 import cors from 'cors';
 import logger from 'morgan';
-
+import helmet from 'helmet';
 import { errorHandler, unknownEndpoint } from './middleware';
 import { sequelize } from './db';
 import { COOKIE_EXPIRE_TIME, SECRET_KEY } from './config';
@@ -71,7 +71,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
