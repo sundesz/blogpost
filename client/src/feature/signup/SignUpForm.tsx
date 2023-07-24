@@ -27,7 +27,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   const VALIDATION_SCHEMA = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
+    email: Yup.string().email('Invalid username').required('Email is required'),
     role: Yup.string().required('Role is required').oneOf(['user', 'author']),
     password: Yup.string()
       .min(6, 'Password must be at least 6 character long')
