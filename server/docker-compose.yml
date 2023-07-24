@@ -12,7 +12,4 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: blogpost
     volumes:
-      - blog-pgdata:/var/lib/postgresql/data
-
-volumes:
-  blog-pgdata:
+      - ./pgdata:/var/lib/postgresql/data
