@@ -16,12 +16,6 @@ const handleLogin: RequestHandler<unknown, unknown, Credential> = async (
   try {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json(userMessage.warning.REQUIRED_USERNAME_PASSWORD);
-    }
-
     const user = await getUser(username);
     if (!user) {
       return res.status(401).json(userMessage.error.INVALID_USERNAME_PASSWORD);
