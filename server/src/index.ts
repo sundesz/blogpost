@@ -12,7 +12,9 @@ export const SRC_DIR = __dirname;
 const start = async () => {
   try {
     await connectToDatabase();
-    server.listen(PORT, () => console.log(`Server is running at ${PORT}`));
+    server.listen(PORT, () =>
+      console.log(`Server is running at http://localhost:${PORT}`)
+    );
   } catch (error: unknown) {
     logErrorMessage(error);
     console.log(error);
