@@ -88,6 +88,10 @@ app.get('/', (req: Request, res: Response) => {
   }
 });
 
+app.get('/healthcheck', (_req: Request, res: Response) => {
+  res.sendStatus(200);
+});
+
 app.use('/api/v1/users', routers.user);
 app.use('/api/v1/authors', routers.author);
 app.use('/api/v1/blogs', routers.blog);
